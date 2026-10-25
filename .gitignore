@@ -23,3 +23,6 @@ coverage.xml
 
 # Local secrets
 .env
+
+# Web demo tooling
+node_modules/

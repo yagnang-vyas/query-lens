@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QueryLens Playground</title>
+  <meta name="description" content="Try QueryLens in your browser: analyze PostgreSQL and MySQL slow query logs without uploading them anywhere.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="stylesheet" href="app.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='14' cy='14' r='8' fill='none' stroke='%2358a6ff' stroke-width='3'/%3E%3Cpath d='M20 20l8 8' stroke='%2358a6ff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#playground">Skip to the playground</a>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="./" aria-label="QueryLens home">
+        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="3"/><path d="M20 20l8 8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        QueryLens
+      </a>
+      <nav aria-label="Project links">
+        <a href="https://github.com/yagnang-vyas/query-lens#installation">Install</a>
+        <a href="https://github.com/yagnang-vyas/query-lens#readme">Docs</a>
+        <a href="https://github.com/yagnang-vyas/query-lens">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <h1>Find the queries that cost you the most.</h1>
+      <p class="lead">QueryLens reads PostgreSQL and MySQL slow query logs, groups equivalent queries by fingerprint, ranks them by time and flags common anti-patterns. This page runs the real Python package in your browser (via Pyodide). <strong>Your log never leaves your device.</strong></p>
+      <ul class="features">
+        <li><strong>Two formats.</strong> PostgreSQL stderr logs and MySQL slow query logs, auto-detected.</li>
+        <li><strong>Fingerprinting.</strong> Literals become <code>?</code>, so reports carry no values.</li>
+        <li><strong>Exact statistics.</strong> Count, total, mean, p50, p95 (nearest-rank), max, share.</li>
+        <li><strong>Transparent hints.</strong> Eight heuristics on query text, with stated limits.</li>
+      </ul>
+    </section>
+
+    <section id="playground" class="wrap" aria-labelledby="pg-title">
+      <h2 id="pg-title">Playground</h2>
+      <p id="engine-status" class="status" role="status" aria-live="polite">Loading the analysis engine…</p>
+
+      <div class="panel">
+        <div class="row">
+          <span class="label" id="samples-label">Sample logs</span>
+          <div class="btns" role="group" aria-labelledby="samples-label">
+            <button type="button" class="btn" data-sample="postgres-sample.log" disabled>PostgreSQL sample</button>
+            <button type="button" class="btn" data-sample="mysql-slow-sample.log" disabled>MySQL sample</button>
+          </div>
+          <span class="label">or</span>
+          <label class="btn file" for="file">Choose a log file…</label>
+          <input id="file" type="file" accept=".log,.txt,text/plain" class="visually-hidden">
+        </div>
+        <label for="log" class="label">Log text <span class="muted" id="log-meta"></span></label>
+        <textarea id="log" rows="9" spellcheck="false" autocomplete="off" placeholder="Paste a PostgreSQL or MySQL slow query log here, load a sample, or choose a file. Maximum 5 MB. Plain text only (decompress .gz first)."></textarea>
+
+        <details class="options">
+          <summary>Options (same as the CLI flags)</summary>
+          <div class="grid">
+            <label>Format
+              <select id="opt-format"><option value="auto">auto-detect</option><option value="postgres">postgres</option><option value="mysql">mysql</option></select>
+            </label>
+            <label>Rank by (<code>--sort</code>)
+              <select id="opt-sort">
+                <option value="total">total time</option><option value="count">count</option><option value="mean">mean</option>
+                <option value="p95">p95</option><option value="max">max</option>
+              </select>
+            </label>
+            <label>Top N (<code>--top</code>, max 500)
+              <input id="opt-top" type="number" min="1" max="500" value="50" inputmode="numeric">
+            </label>
+            <label>Min duration ms (<code>--min-duration</code>)
+              <input id="opt-min" type="number" min="0" step="any" value="0" inputmode="decimal">
+            </label>
+            <label>Fail if p95 over ms (<code>--fail-over-ms</code>)
+              <input id="opt-over" type="number" min="0" step="any" placeholder="off" inputmode="decimal">
+            </label>
+            <label>Fail on hints (<code>--fail-on-hint</code>)
+              <input id="opt-hints" type="text" placeholder="e.g. QL001,QL003" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+        </details>
+
+        <div class="row">
+          <button type="button" id="run" class="btn primary" disabled>Analyze</button>
+          <button type="button" id="clear" class="btn">Clear</button>
+          <span id="run-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div id="error" class="alert" role="alert" hidden></div>
+
+      <div id="results" hidden>
+        <h3 id="results-title">Results</h3>
+        <dl id="summary" class="summary"></dl>
+        <p id="gate" class="gate" hidden></p>
+
+        <div role="tablist" aria-label="Result views" class="tabs">
+          <button role="tab" id="tab-patterns" aria-controls="panel-patterns" aria-selected="true" type="button">Query patterns</button>
+          <button role="tab" id="tab-text" aria-controls="panel-text" aria-selected="false" tabindex="-1" type="button">Text report</button>
+          <button role="tab" id="tab-markdown" aria-controls="panel-markdown" aria-selected="false" tabindex="-1" type="button">Markdown</button>
+          <button role="tab" id="tab-json" aria-controls="panel-json" aria-selected="false" tabindex="-1" type="button">JSON</button>
+        </div>
+
+        <div role="tabpanel" id="panel-patterns" aria-labelledby="tab-patterns">
+          <div class="toolbar">
+            <label>Search <input id="q" type="search" placeholder="query text or fingerprint ID" autocomplete="off"></label>
+            <label>Hint
+              <select id="hint-filter"><option value="">any</option></select>
+            </label>
+            <label>Sort
+              <select id="view-sort">
+                <option value="total_ms">total time</option><option value="count">count</option><option value="mean_ms">mean</option>
+                <option value="p95_ms">p95</option><option value="max_ms">max</option><option value="share_pct">share</option>
+              </select>
+            </label>
+            <span id="shown" class="muted" role="status" aria-live="polite"></span>
+          </div>
+          <p id="truncated" class="muted" hidden></p>
+          <div id="list" class="list"></div>
+          <p id="empty" class="muted" hidden>No query pattern matches the current search and filter.</p>
+        </div>
+        <div role="tabpanel" id="panel-text" aria-labelledby="tab-text" hidden></div>
+        <div role="tabpanel" id="panel-markdown" aria-labelledby="tab-markdown" hidden></div>
+        <div role="tabpanel" id="panel-json" aria-labelledby="tab-json" hidden></div>
+      </div>
+    </section>
+
+    <section class="wrap about" aria-labelledby="about-title">
+      <h2 id="about-title">About this demo</h2>
+      <ul>
+        <li>The analysis is performed by the unmodified <code>querylens</code> Python package compiled to WebAssembly with Pyodide. The page only adds the interface. The "Text report", "Markdown" and "JSON" tabs show the CLI's own output.</li>
+        <li>Everything runs locally in a Web Worker. The log is not sent to any server. The page downloads Pyodide (about 10 MB) from the jsDelivr CDN on first load.</li>
+        <li>Limits of the demo: 5 MB per log, up to 500 patterns shown, plain-text input only (the CLI also reads <code>.gz</code> and stdin), and an analysis that runs over 60 seconds is stopped.</li>
+        <li>Hints are heuristics on query text. They do not see your schema, indexes or query plans, and can be wrong in both directions. PostgreSQL support covers the stderr log format only.</li>
+        <li>Normalization is not anonymization: identifiers stay in reports. Review output before sharing it.</li>
+      </ul>
+      <h3>Use the CLI</h3>
+      <pre class="code"><code>git clone https://github.com/yagnang-vyas/query-lens.git
+cd query-lens &amp;&amp; pipx install .
+querylens postgresql.log --top 5 --sort p95
+querylens mysql-slow.log --output markdown
+querylens app.log --fail-on-hint QL001,QL003 --fail-over-ms 750</code></pre>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">QueryLens is open source (MIT). <a href="https://github.com/yagnang-vyas/query-lens">Source on GitHub</a>.</div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

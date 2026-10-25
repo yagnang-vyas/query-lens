@@ -20,6 +20,10 @@ A slow query log holds thousands of near-identical entries that differ only in t
 - Malformed entries are counted and skipped, never fatal.
 - Zero runtime dependencies; Python 3.10 to 3.14.
 
+## Live demo
+
+**Try it in your browser: _Live demo link coming soon_** (placeholder until the site is deployed). The [web playground](web/README.md) runs this exact Python package in your browser through Pyodide, so your log is analyzed locally and never uploaded. It offers one-click sample logs, file upload or paste, search, sorting and hint filtering, per-pattern details, and the CLI's own text, Markdown and JSON reports. Demo limits: logs up to 5 MB, plain text only (no `.gz` or stdin), up to 500 patterns shown, and an analysis is stopped after 60 seconds. The CLI remains the primary product.
+
 ## Installation
 
 QueryLens is **not on PyPI yet**. Install it from a clone:
