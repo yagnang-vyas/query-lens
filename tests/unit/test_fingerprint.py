@@ -52,6 +52,13 @@ def test_normalize(sql: str, expected: str) -> None:
     assert normalize(sql) == expected
 
 
+def test_postgres_backslash_is_literal_outside_e_strings() -> None:
+    sql = r"select 'C:\', a from t where b = 'x'"
+    assert normalize(sql, "postgres") == "select ?, a from t where b = ?"
+    assert normalize(r"select E'it\'s', a from t", "postgres") == "select ?, a from t"
+    assert normalize(r"select 'it\'s', a from t", "mysql") == "select ?, a from t"
+
+
 def test_mysql_dialect_double_quote_is_string_and_hash_is_comment() -> None:
     assert normalize('select * from t where a = "x" # trailing\n and b = 1', "mysql") == (
         "select * from t where a = ? and b = ?"

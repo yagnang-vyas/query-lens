@@ -67,6 +67,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    _add_input_options(parser)
+    _add_report_options(parser)
+    _add_fail_options(parser)
+    parser.add_argument(
+        "files", nargs="+", metavar="FILE", help="slow query log file(s), '-' for stdin, .gz ok"
+    )
+    return parser
+
+
+def _add_input_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--format",
         choices=("auto", "postgres", "mysql"),
@@ -74,6 +84,16 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"log format (default: auto-detect from the first {DETECT_LINES} lines of the "
         "first file)",
     )
+    parser.add_argument(
+        "--min-duration",
+        type=_milliseconds,
+        default=0.0,
+        metavar="MS",
+        help="drop entries faster than MS milliseconds before aggregation",
+    )
+
+
+def _add_report_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--output", choices=OUTPUT_FORMATS, default="text", help="report format (default: text)"
     )
@@ -90,13 +110,9 @@ def build_parser() -> argparse.ArgumentParser:
         default="total",
         help="ranking key, descending (default: total)",
     )
-    parser.add_argument(
-        "--min-duration",
-        type=_milliseconds,
-        default=0.0,
-        metavar="MS",
-        help="drop entries faster than MS milliseconds before aggregation",
-    )
+
+
+def _add_fail_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--fail-on-hint",
         type=_hint_ids,
@@ -113,10 +129,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="exit 1 if any fingerprint's p95 exceeds MS milliseconds. "
         "Checked on all fingerprints, not only the --top subset",
     )
-    parser.add_argument(
-        "files", nargs="+", metavar="FILE", help="slow query log file(s), '-' for stdin, .gz ok"
-    )
-    return parser
 
 
 @dataclass(frozen=True, slots=True)

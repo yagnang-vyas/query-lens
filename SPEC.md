@@ -67,27 +67,27 @@ inputs.py  ──lines──▶  parsers/{postgres,mysql}.py  ──LogEntry─�
 
 ## Acceptance criteria
 
-- [ ] PostgreSQL stderr logs from `log_min_duration_statement` parse correctly regardless of
+- [x] PostgreSQL stderr logs from `log_min_duration_statement` parse correctly regardless of
       `log_line_prefix`, including multi-line statements, `execute <name>`, parse/bind skipping,
       duration-only lines, DETAIL lines, malformed durations and CRLF.
-- [ ] MySQL/MariaDB slow logs parse correctly, including entries without `# Time:`, multi-line
+- [x] MySQL/MariaDB slow logs parse correctly, including entries without `# Time:`, multi-line
       statements, `use`/`SET timestamp` skipping, banner lines, extra fields, administrator
       commands, malformed `Query_time` and entries without a statement.
-- [ ] Format auto-detection works from the first 200 lines; undetectable input exits 2.
-- [ ] Equivalent query shapes with different literals produce the same fingerprint ID; different
+- [x] Format auto-detection works from the first 200 lines; undetectable input exits 2.
+- [x] Equivalent query shapes with different literals produce the same fingerprint ID; different
       shapes produce different IDs; normalization is idempotent on every fixture query.
-- [ ] Percentiles use nearest-rank and match hand-computed values for n = 1, 2, 10, 20.
-- [ ] Share percentages sum to ~100; sorting is deterministic with fingerprint-ID tie-break.
-- [ ] Each of the eight hint rules has positive and negative tests, including tricky negatives.
-- [ ] Text, JSON and Markdown reports are produced; JSON matches golden files byte for byte.
-- [ ] Exit codes 0, 1 (each fail flag) and 2 (missing file, bad flag, undetectable format, empty
+- [x] Percentiles use nearest-rank and match hand-computed values for n = 1, 2, 10, 20.
+- [x] Share percentages sum to ~100; sorting is deterministic with fingerprint-ID tie-break.
+- [x] Each of the eight hint rules has positive and negative tests, including tricky negatives.
+- [x] Text, JSON and Markdown reports are produced; JSON matches golden files byte for byte.
+- [x] Exit codes 0, 1 (each fail flag) and 2 (missing file, bad flag, undetectable format, empty
       log) are covered by integration tests.
-- [ ] `.gz` input and stdin input work end to end.
-- [ ] Privacy: a fake email, a fake API-key-like string and a `DETAIL: parameters:` line never
+- [x] `.gz` input and stdin input work end to end.
+- [x] Privacy: a fake email, a fake API-key-like string and a `DETAIL: parameters:` line never
       appear in any output format.
-- [ ] `make check` passes: ruff, ruff format, mypy strict, pytest with ≥90% branch coverage.
-- [ ] `pip install .` into a fresh virtual environment works and `querylens` runs.
-- [ ] Zero runtime dependencies.
+- [x] `make check` passes: ruff, ruff format, mypy strict, pytest with ≥90% branch coverage.
+- [x] `pip install .` into a fresh virtual environment works and `querylens` runs.
+- [x] Zero runtime dependencies.
 
 ## Test plan
 
@@ -154,3 +154,24 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
    `# Time:`, `# User@Host:` and `# Query_time:`, which open a new entry.
 8. **MySQL timestamp fallback.** When `# Time:` is absent, the `SET timestamp=` epoch is converted
    to an ISO-8601 UTC string.
+9. **Fail conditions cover all fingerprints.** The brief says "any reported fingerprint" in one
+   place and "all fingerprints, not only the `--top` subset" in another. QueryLens follows the
+   explicit second rule. Entries removed by `--min-duration` are not aggregated, so they cannot
+   trigger a fail condition either. If both flags trigger, one stderr line carries both reasons.
+10. **Hint legend scope.** Reports list only hints that appear on the reported (top-N)
+    fingerprints, in text, JSON and Markdown alike.
+11. **`IN` / `VALUES` collapsing.** Single-element lists collapse too (`in (?)` becomes `in (?+)`),
+    so one-row and many-row statements share a fingerprint. `VALUES` rows may also contain
+    `NULL`, `DEFAULT`, booleans, `current_*` words and argument-less calls such as `now()`.
+12. **String escapes.** PostgreSQL strings treat backslash as an escape only inside `E'...'`;
+    MySQL and the generic dialect always do. A mistaken guess can only over-consume text, never
+    reveal it.
+13. **`parse`/`bind` and `plan:` handling** both count as `skipped_phase` (see decision 5).
+14. **Reported counts.** `entries` is the number of entries parsed; `filtered_out` entries are a
+    subset of them that `--min-duration` removed before aggregation.
+15. **Zero entries parsed** exits 2 only when the parser found no entries at all; a run where
+    `--min-duration` removed every entry succeeds with an empty report.
+16. **Local git identity.** Commits were made with a repository-local identity
+    (`Yagnang Vyas <168338381+ChakraCoder@users.noreply.github.com>`), which is not a global git
+    setting. Change it with `git rebase` / `git commit --amend --reset-author` before publishing
+    if you prefer another address.

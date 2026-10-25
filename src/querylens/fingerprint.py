@@ -88,7 +88,7 @@ _COMMON_PATTERNS = r"""
     (?P<ws>\s+)
   | (?P<line_comment>--[^\n]*)
   | (?P<block_comment>/\*)
-  | (?P<string>(?:[eEnNbBxX](?='))?'(?:[^'\\]|\\.|'')*(?:'|\Z))
+  | (?P<string>@@STRING@@)
   | (?P<backtick>`(?:[^`]|``)*(?:`|\Z))
   | (?P<dollar>\$(?:[^\W\d]\w*)?\$)
   | (?P<param>\$\d+|\?\+(?=\s*\))|\?|:[^\W\d]\w*)
@@ -98,28 +98,33 @@ _COMMON_PATTERNS = r"""
   | (?P<punct>[(),;\[\]{}.])
 """
 
-_TOKEN_RES: dict[Dialect, re.Pattern[str]] = {
-    "generic": re.compile(
-        _COMMON_PATTERNS
-        + r"""
+# Strings with backslash escapes (MySQL, and the conservative choice for unknown dialects).
+_BACKSLASH_STRING = r"""(?:[eEnNbBxX](?='))?'(?:[^'\\]|\\.|'')*(?:'|\Z)"""
+# PostgreSQL: backslashes are escapes only inside E'...' strings (standard_conforming_strings).
+_POSTGRES_STRING = r"""[eE]'(?:[^'\\]|\\.|'')*(?:'|\Z)|(?:[nNbBxX](?='))?'(?:[^']|'')*(?:'|\Z)"""
+
+_GENERIC_TAIL = r"""
   | (?P<dquote>"(?:[^"]|"")*(?:"|\Z))
   | (?P<op>[+\-*/<>=~!@#%^&|]+)
   | (?P<other>.)
-""",
-        re.VERBOSE | re.DOTALL,
-    ),
-    "mysql": re.compile(
-        r"(?P<hash_comment>\#[^\n]*)|"
-        + _COMMON_PATTERNS
-        + r"""
+"""
+_MYSQL_TAIL = r"""
   | (?P<dstring>"(?:[^"\\]|\\.|"")*(?:"|\Z))
   | (?P<op>[+\-*/<>=~!@%^&|]+)
   | (?P<other>.)
-""",
-        re.VERBOSE | re.DOTALL,
-    ),
+"""
+
+
+def _compile(string_pattern: str, tail: str, head: str = "") -> re.Pattern[str]:
+    body = _COMMON_PATTERNS.replace("@@STRING@@", string_pattern)
+    return re.compile(head + body + tail, re.VERBOSE | re.DOTALL)
+
+
+_TOKEN_RES: dict[Dialect, re.Pattern[str]] = {
+    "generic": _compile(_BACKSLASH_STRING, _GENERIC_TAIL),
+    "postgres": _compile(_POSTGRES_STRING, _GENERIC_TAIL),
+    "mysql": _compile(_BACKSLASH_STRING, _MYSQL_TAIL, head=r"(?P<hash_comment>\#[^\n]*)|"),
 }
-_TOKEN_RES["postgres"] = _TOKEN_RES["generic"]
 
 
 @dataclass(frozen=True, slots=True)

@@ -17,8 +17,18 @@ def truncate(query: str, width: int = QUERY_WIDTH) -> str:
 
 
 def render_text(data: ReportData) -> str:
+    lines = _header(data)
+    if not data.fingerprints:
+        lines.append("No query fingerprints to report.")
+    else:
+        lines.extend(_table(data))
+        lines.extend(_legend(data))
+    return "\n".join(lines) + "\n"
+
+
+def _header(data: ReportData) -> list[str]:
     stats = data.parse_stats
-    lines = [
+    return [
         f"QueryLens {__version__} | format: {data.log_format} | files: {', '.join(data.files)}",
         f"entries parsed: {stats.entries} | malformed: {stats.malformed} | "
         f"duration-only: {stats.duration_only} | skipped: {stats.skipped_phase} | "
@@ -27,9 +37,9 @@ def render_text(data: ReportData) -> str:
         f"showing top {len(data.fingerprints)} by {data.sort}",
         "",
     ]
-    if not data.fingerprints:
-        lines.append("No query fingerprints to report.")
-        return "\n".join(lines) + "\n"
+
+
+def _table(data: ReportData) -> list[str]:
     rows = [
         (
             str(rank),
@@ -53,20 +63,25 @@ def render_text(data: ReportData) -> str:
         ]
         return "  ".join(cells).rstrip()
 
-    lines.append(format_row(_COLUMNS))
+    lines = [format_row(_COLUMNS)]
     for row, item in zip(rows, data.fingerprints, strict=True):
         lines.append(format_row(row))
         lines.append("    " + truncate(one_line(item.query)))
+    return lines
+
+
+def _legend(data: ReportData) -> list[str]:
     legend = data.hint_legend()
-    if legend:
-        lines.extend(["", "Hints (heuristics, may be wrong; see README):"])
-        for hint in legend:
-            lines.extend(
-                textwrap.wrap(
-                    f"{hint.id} {hint.title}: {hint.description}",
-                    width=100,
-                    initial_indent="  ",
-                    subsequent_indent="      ",
-                )
+    if not legend:
+        return []
+    lines = ["", "Hints (heuristics, may be wrong; see README):"]
+    for hint in legend:
+        lines.extend(
+            textwrap.wrap(
+                f"{hint.id} {hint.title}: {hint.description}",
+                width=100,
+                initial_indent="  ",
+                subsequent_indent="      ",
             )
-    return "\n".join(lines) + "\n"
+        )
+    return lines
