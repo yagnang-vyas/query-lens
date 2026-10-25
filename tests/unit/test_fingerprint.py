@@ -28,7 +28,7 @@ from querylens.fingerprint import fingerprint_id, normalize
         ("select -1, a - 1, a -1, (-2), x=-3", "select ?, a - ?, a - ?, (?), x = ?"),
         ("select a-1", "select a - ?"),
         ("select a::int, b[1], t.c", "select a::int, b[?], t.c"),
-        ("select count(*), max (x) from t", "select count(*), max (x) from t"),
+        ("select count(*), max (x) from t", "select count(*), max(x) from t"),
         ("select * from t where id in (1, 2, 3)", "select * from t where id in (?+)"),
         ("select * from t where id in (1)", "select * from t where id in (?+)"),
         ("select * from t where id in (select 1)", "select * from t where id in (select ?)"),
@@ -104,3 +104,57 @@ def test_same_shape_same_id_different_shape_different_id() -> None:
     assert a != c
     assert len(a) == 12
     int(a, 16)
+
+
+@pytest.mark.parametrize(
+    ("a", "b"),
+    [
+        # Function-call spacing must not split one query shape into two fingerprints.
+        ("select count(*) from t", "select count (*) from t"),
+        ("insert into t(a, b) values (1, 2)", "insert into t (a, b) values (1, 2)"),
+        # Variable-length ARRAY[...] literals, common with "= ANY(ARRAY[...])".
+        (
+            "select * from t where id = any(array[1, 2, 3])",
+            "select * from t where id = any(array[4, 5])",
+        ),
+        # Row-value IN lists of different lengths.
+        (
+            "select * from t where (a, b) in ((1, 2), (3, 4))",
+            "select * from t where (a, b) in ((5, 6))",
+        ),
+    ],
+)
+def test_equivalent_shapes_share_a_fingerprint(a: str, b: str) -> None:
+    assert normalize(a, "postgres") == normalize(b, "postgres")
+
+
+def test_array_and_row_value_lists_collapse() -> None:
+    assert normalize("select * from t where id = any(array[1, 2, 3])", "postgres") == (
+        "select * from t where id = any (array[?+])"
+    )
+    assert normalize("select * from t where (a, b) in ((1, 2), (3, 4))") == (
+        "select * from t where (a, b) in (?+)"
+    )
+    # Not literal-only: left alone.
+    assert normalize("select array[a, 1] from t") == "select array[a, ?] from t"
+    assert normalize("select * from t where (a, b) in ((1, c))") == (
+        "select * from t where (a, b) in ((?, c))"
+    )
+
+
+@pytest.mark.parametrize(
+    "sql",
+    [
+        "select * from t where id = any(array[1, 2, 3])",
+        "select * from t where (a, b) in ((1, 2), (3, 4))",
+        "select max (x), t (a) from t",
+    ],
+)
+def test_new_collapsing_is_idempotent(sql: str) -> None:
+    once = normalize(sql, "postgres")
+    assert normalize(once, "postgres") == once
+
+
+def test_insert_column_list_keeps_space_and_calls_do_not() -> None:
+    assert normalize("INSERT INTO s.t(a,b) VALUES (1,2)") == "insert into s.t (a, b) values (?+)"
+    assert normalize("select lower (a), count (*) from t") == "select lower(a), count(*) from t"

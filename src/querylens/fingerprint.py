@@ -91,7 +91,7 @@ _COMMON_PATTERNS = r"""
   | (?P<string>@@STRING@@)
   | (?P<backtick>`(?:[^`]|``)*(?:`|\Z))
   | (?P<dollar>\$(?:[^\W\d]\w*)?\$)
-  | (?P<param>\$\d+|\?\+(?=\s*\))|\?|:[^\W\d]\w*)
+  | (?P<param>\$\d+|\?\+(?=\s*[)\]])|\?|:[^\W\d]\w*)
   | (?P<colon>::|:=|:)
   | (?P<number>0[xX][0-9A-Fa-f]+|0[bB][01]+|(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)
   | (?P<word>[^\W\d][\w$]*)
@@ -138,7 +138,6 @@ class Token:
 
     kind: str
     text: str
-    space_before: bool = False
     value: str | None = None
 
 
@@ -147,22 +146,17 @@ def tokenize(sql: str, dialect: Dialect = "generic") -> list[Token]:
     pattern = _TOKEN_RES[dialect]
     tokens: list[Token] = []
     pos, end = 0, len(sql)
-    space = False
     while pos < end:
         match = pattern.match(sql, pos)
         assert match is not None  # the final ``other`` alternative matches any character
         group = match.lastgroup
         text = match.group()
         new_pos = match.end()
-        if group in ("ws", "line_comment", "hash_comment"):
-            space = True
-        elif group == "block_comment":
+        if group == "block_comment":
             new_pos = _skip_block_comment(sql, pos, nested=dialect != "mysql")
-            space = True
-        else:
-            token, new_pos = _make_token(group, text, sql, pos, new_pos, tokens, space)
+        elif group not in ("ws", "line_comment", "hash_comment"):
+            token, new_pos = _make_token(group, text, sql, pos, new_pos, tokens)
             tokens.append(token)
-            space = False
         pos = new_pos
     return tokens
 
@@ -174,22 +168,21 @@ def _make_token(
     start: int,
     end: int,
     previous: Sequence[Token],
-    space: bool,
 ) -> tuple[Token, int]:
     """Build the token for a non-whitespace match, returning it and the next scan position."""
     if group in ("string", "dstring", "number", "param"):
-        return Token(LITERAL, "?+" if text == "?+" else "?", space, text), end
+        return Token(LITERAL, "?+" if text == "?+" else "?", text), end
     if group == "dollar":
         close = sql.find(text, end)
         stop = len(sql) if close == -1 else close + len(text)
-        return Token(LITERAL, "?", space, sql[start:stop]), stop
+        return Token(LITERAL, "?", sql[start:stop]), stop
     if group == "word":
-        return Token(WORD, text.lower(), space), end
+        return Token(WORD, text.lower()), end
     if group in ("dquote", "backtick"):
-        return _quoted_identifier(text, space), end
+        return _quoted_identifier(text), end
     if group == "op":
-        return _operator(text, sql, start, previous, space)
-    return Token(PUNCT, text, space), end
+        return _operator(text, sql, start, previous)
+    return Token(PUNCT, text), end
 
 
 def _skip_block_comment(sql: str, start: int, *, nested: bool) -> int:
@@ -210,18 +203,16 @@ def _skip_block_comment(sql: str, start: int, *, nested: bool) -> int:
     return len(sql)
 
 
-def _quoted_identifier(text: str, space: bool) -> Token:
+def _quoted_identifier(text: str) -> Token:
     quote = text[0]
     inner = text[1:-1] if len(text) > 1 and text.endswith(quote) else text[1:]
     inner = inner.replace(quote * 2, quote).lower()
     if _SIMPLE_IDENT.fullmatch(inner) and inner not in KEYWORDS:
-        return Token(IDENT, inner, space)
-    return Token(IDENT, quote + inner.replace(quote, quote * 2) + quote, space)
+        return Token(IDENT, inner)
+    return Token(IDENT, quote + inner.replace(quote, quote * 2) + quote)
 
 
-def _operator(
-    text: str, sql: str, start: int, previous: Sequence[Token], space: bool
-) -> tuple[Token, int]:
+def _operator(text: str, sql: str, start: int, previous: Sequence[Token]) -> tuple[Token, int]:
     """Lex an operator the way PostgreSQL does.
 
     A run of operator characters is cut before any ``--`` or ``/*`` (they start comments) and a
@@ -240,8 +231,8 @@ def _operator(
     if text == "-" and _starts_operand(previous):
         number = _TOKEN_RES["generic"].match(sql, end)
         if number is not None and number.lastgroup == "number":
-            return Token(LITERAL, "?", space, "-" + number.group()), number.end()
-    return Token(OP, text, space), end
+            return Token(LITERAL, "?", "-" + number.group()), number.end()
+    return Token(OP, text), end
 
 
 def _starts_operand(previous: Sequence[Token]) -> bool:
@@ -257,67 +248,94 @@ def _starts_operand(previous: Sequence[Token]) -> bool:
 
 
 def collapse_lists(tokens: Sequence[Token]) -> list[Token]:
-    """Collapse ``in (?, ?, ...)`` and ``values (...), (...)`` to ``(?+)``."""
+    """Collapse variable-length literal lists to ``?+``.
+
+    ``in (?, ?, ...)`` and row-value ``in ((?, ?), (?, ?))`` become ``in (?+)``, multi-row
+    ``values (...), (...)`` becomes ``values (?+)`` and ``array[?, ?, ...]`` becomes
+    ``array[?+]``, so the same query shape gets one fingerprint whatever the list length.
+    """
     out: list[Token] = []
     i = 0
     while i < len(tokens):
         token = tokens[i]
         out.append(token)
         i += 1
-        if token.kind != WORD or token.text not in ("in", "values"):
+        if token.kind != WORD or token.text not in ("in", "values", "array"):
+            continue
+        if token.text == "array":
+            end = _match_literal_list(tokens, i, frozenset(), brackets=("[", "]"))
+            if end is not None:
+                out.extend((Token(PUNCT, "["), Token(LITERAL, "?+"), Token(PUNCT, "]")))
+                i = end
             continue
         allowed = _COLLAPSE_VALUE_WORDS if token.text == "values" else frozenset()
-        end = _match_literal_tuple(tokens, i, allowed)
+        end = _match_literal_list(tokens, i, allowed, nested=token.text == "in")
         if end is None:
             continue
         if token.text == "values":
             while end < len(tokens) and tokens[end].text == ",":
-                next_end = _match_literal_tuple(tokens, end + 1, allowed)
+                next_end = _match_literal_list(tokens, end + 1, allowed)
                 if next_end is None:
                     break
                 end = next_end
-        out.extend(
-            (
-                Token(PUNCT, "(", True),
-                Token(LITERAL, "?+"),
-                Token(PUNCT, ")"),
-            )
-        )
+        out.extend((Token(PUNCT, "("), Token(LITERAL, "?+"), Token(PUNCT, ")")))
         i = end
     return out
 
 
-def _match_literal_tuple(tokens: Sequence[Token], start: int, words: frozenset[str]) -> int | None:
-    """Match ``( item [, item]... )`` where every item is a literal, one of ``words``, or (for
-    ``values``) a call without arguments such as ``now()``.
+def _match_literal_list(
+    tokens: Sequence[Token],
+    start: int,
+    words: frozenset[str],
+    *,
+    nested: bool = False,
+    brackets: tuple[str, str] = ("(", ")"),
+) -> int | None:
+    """Match ``( item [, item]... )`` where every item is a literal, one of ``words``, (when
+    ``words`` is non-empty, i.e. for ``values``) a call without arguments such as ``now()``, or
+    (when ``nested``) a parenthesized list of such items.
 
-    Returns the index just after the closing parenthesis, or ``None`` if there is no such tuple.
+    Returns the index just after the closing bracket, or ``None`` if there is no such list.
     """
-    if start >= len(tokens) or tokens[start].text != "(":
+    open_, close = brackets
+    if start >= len(tokens) or not _is_punct(tokens[start], open_):
         return None
     i = start + 1
-    expect_item = True
     while i < len(tokens):
-        token = tokens[i]
-        if expect_item:
-            if token.kind == LITERAL or (token.kind == WORD and token.text in words):
-                pass
-            elif words and token.kind == WORD and _is_empty_call(tokens, i):
-                i += 2  # skip the "(" and let the common code skip the ")"
-            else:
-                return None
-        elif token.text == ")":
-            return i + 1
-        elif token.text != ",":
+        item_end = _match_list_item(tokens, i, words, nested)
+        if item_end is None or item_end >= len(tokens):
             return None
-        expect_item = not expect_item
-        i += 1
+        if _is_punct(tokens[item_end], close):
+            return item_end + 1
+        if not _is_punct(tokens[item_end], ","):
+            return None
+        i = item_end + 1
     return None
+
+
+def _match_list_item(
+    tokens: Sequence[Token], index: int, words: frozenset[str], nested: bool
+) -> int | None:
+    """Return the index just after one list item starting at ``index``, or ``None``."""
+    token = tokens[index]
+    if token.kind == LITERAL or (token.kind == WORD and token.text in words):
+        return index + 1
+    if words and token.kind == WORD and _is_empty_call(tokens, index):
+        return index + 3
+    if nested and _is_punct(token, "("):
+        return _match_literal_list(tokens, index, words)
+    return None
+
+
+def _is_punct(token: Token, text: str) -> bool:
+    return token.kind == PUNCT and token.text == text
 
 
 def _is_empty_call(tokens: Sequence[Token], index: int) -> bool:
     return (
-        index + 2 < len(tokens) and tokens[index + 1].text == "(" and tokens[index + 2].text == ")"
+        index + 2 < len(tokens)
+        and _is_punct(tokens[index + 1], "(")
+        and _is_punct(tokens[index + 2], ")")
     )
 
 
@@ -325,22 +343,30 @@ def render(tokens: Sequence[Token]) -> str:
     """Join tokens with canonical spacing."""
     parts: list[str] = []
     previous: Token | None = None
+    # True while reading the table name after INTO ("insert into s.t (a, b)"), so its column
+    # list is rendered "t (a, b)" rather than looking like a function call.
+    after_into = False
     for token in tokens:
-        if previous is not None and _needs_space(previous, token):
+        if previous is not None and _needs_space(previous, token, after_into):
             parts.append(" ")
         parts.append(token.text)
+        if token.kind == WORD and token.text == "into":
+            after_into = True
+        elif not (token.kind in (WORD, IDENT) or _is_punct(token, ".")):
+            after_into = False
         previous = token
     return "".join(parts)
 
 
-def _needs_space(previous: Token, token: Token) -> bool:
+def _needs_space(previous: Token, token: Token, after_into: bool = False) -> bool:
     if token.text in (")", ",", ".", "::", ";", "[", "]") and token.kind == PUNCT:
         return False
     if previous.kind == PUNCT and previous.text in ("(", ".", "::", "["):
         return False
     if token.kind == PUNCT and token.text == "(" and previous.kind in (WORD, IDENT):
-        # Function calls keep their original "f(" / "f (" spacing; keywords always get a space.
-        return previous.text in KEYWORDS or token.space_before
+        # "count(*)" and "count (*)" are the same shape, so calls are always rendered without a
+        # space. Keywords ("in (", "values (") and INSERT column lists always get one.
+        return previous.text in KEYWORDS or after_into
     return True
 
 
