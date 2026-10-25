@@ -11,14 +11,14 @@ A slow query log holds thousands of near-identical entries that differ only in t
 ## Features
 
 - Parses PostgreSQL (`log_min_duration_statement`, stderr format, any `log_line_prefix`) and MySQL / MariaDB slow query logs, including multi-line statements, and auto-detects which one you gave it.
-- Groups equivalent queries with a tokenizer-based fingerprint: literals, placeholders and comments are removed, `IN (...)` and multi-row `VALUES` lists collapse.
+- Groups equivalent queries with a tokenizer-based fingerprint: literals, placeholders and comments are removed, and `IN (...)` (including row-value lists), multi-row `VALUES` and PostgreSQL `ARRAY[...]` literal lists collapse.
 - Reports count, total, mean, p50, p95 and max time, share of total time, and (MySQL) rows examined per row sent.
 - Eight heuristic hints (`QL001` to `QL008`) that state their own limitations.
 - Text, JSON (stable, versioned schema) and Markdown reports.
 - CI gates: `--fail-on-hint` and `--fail-over-ms` with documented exit codes.
 - Reads files, `.gz` files (detected by content) and stdin; streams line by line.
 - Malformed entries are counted and skipped, never fatal.
-- Zero runtime dependencies; Python 3.10 to 3.13.
+- Zero runtime dependencies; Python 3.10 to 3.14.
 
 ## Installation
 
@@ -173,6 +173,7 @@ A fingerprint carries a hint if any of its entries triggered it.
 | 1 | A `--fail-on-hint` or `--fail-over-ms` condition triggered (the report is still printed) |
 | 2 | Usage or input error: bad arguments, missing or unreadable file, undetectable format, or zero entries parsed |
 | 130 | Interrupted with Ctrl-C |
+| 141 | The output pipe was closed early (for example `querylens big.log \| head`); QueryLens stops quietly, the same code a shell reports for a process killed by `SIGPIPE` |
 
 Errors are printed as `querylens: error: <message>` with no traceback. Messages name files and counts, never log content.
 

@@ -41,6 +41,7 @@ querylens [-h] [--version] [--format {auto,postgres,mysql}]
 | 1 | A `--fail-on-hint` or `--fail-over-ms` condition triggered |
 | 2 | Usage or input error: bad arguments, missing/unreadable file, undetectable format, zero entries parsed |
 | 130 | Interrupted (Ctrl-C) |
+| 141 | Output pipe closed early (e.g. piped into `head`); exits quietly without a traceback |
 
 Fail conditions are evaluated on all fingerprints, not only the `--top` subset.
 
@@ -96,7 +97,7 @@ inputs.py  ──lines──▶  parsers/{postgres,mysql}.py  ──LogEntry─�
 - **Integration** (`tests/integration/`): run `python -m querylens` in a subprocess against the
   fixtures; compare JSON with `tests/golden/*.json` (regenerate with `UPDATE_GOLDEN=1 pytest`);
   structural assertions on text and Markdown; every exit code; `.gz` and stdin; privacy.
-- **CI**: GitHub Actions on Python 3.10–3.13 runs `make install` and `make check`.
+- **CI**: GitHub Actions on Python 3.10–3.14 runs `make install` and `make check`.
 
 ## Security and privacy
 
@@ -132,7 +133,7 @@ automation, CI exit codes, and both engines in one tool.
 
 Judgment calls made where the brief was ambiguous. Each one takes the more conservative option.
 
-1. **Local development Python.** Development used Python 3.13; CI covers 3.10–3.13 and the code
+1. **Local development Python.** Development used Python 3.13; CI covers 3.10–3.14 and the code
    targets 3.10 (ruff `target-version = "py310"`, mypy `python_version = "3.10"`).
 2. **Version single-sourcing.** `pyproject.toml` reads the version from `src/querylens/__init__.py`
    via `[tool.hatch.version]`, so it is defined once.
@@ -175,3 +176,13 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
     (`Yagnang Vyas <168338381+ChakraCoder@users.noreply.github.com>`), which is not a global git
     setting. Change it with `git rebase` / `git commit --amend --reset-author` before publishing
     if you prefer another address.
+17. **Exit code 141 for a closed output pipe.** `querylens big.log | head` used to end with a
+    `BrokenPipeError` traceback and exit code 1, which collides with "a fail condition
+    triggered". QueryLens now redirects stdout to `/dev/null` and exits 141 (128 + `SIGPIPE`), the
+    code shells report for other tools in the same situation.
+18. **Canonical call spacing.** `count(*)` and `count (*)` are the same shape, so function calls
+    are always rendered without a space before `(`. Keywords (`in (`, `values (`) and the column
+    list after `INSERT INTO table` keep a space for readability.
+19. **More list collapsing.** Row-value lists (`(a, b) in ((1, 2), (3, 4))`) and PostgreSQL
+    `ARRAY[...]` literal lists collapse to `(?+)` / `[?+]`, because ORMs emit them with a varying
+    number of elements and they would otherwise split one query shape into many fingerprints.
