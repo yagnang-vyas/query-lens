@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import math
+import os
 import sys
 from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
@@ -22,6 +24,7 @@ EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_ERROR = 2
 EXIT_INTERRUPTED = 130
+EXIT_BROKEN_PIPE = 141  # 128 + SIGPIPE, what `yes | head` reports for the writer
 
 DEFAULT_TOP = 10
 _MAX_LISTED_IDS = 5
@@ -149,6 +152,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_ERROR
     except KeyboardInterrupt:
         return EXIT_INTERRUPTED
+    except BrokenPipeError:
+        # The reader went away (``querylens big.log | head``). Point stdout at /dev/null so the
+        # interpreter's final flush cannot raise again, and exit quietly like other Unix tools.
+        _silence_stdout()
+        return EXIT_BROKEN_PIPE
+
+
+def _silence_stdout() -> None:
+    with contextlib.suppress(OSError, ValueError, AttributeError):
+        devnull = os.open(os.devnull, os.O_WRONLY)
+        os.dup2(devnull, sys.stdout.fileno())
+        os.close(devnull)
 
 
 def _run(args: argparse.Namespace) -> int:

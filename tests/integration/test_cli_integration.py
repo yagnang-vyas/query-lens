@@ -12,6 +12,8 @@ from __future__ import annotations
 import gzip
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -286,3 +288,25 @@ def test_errors_do_not_echo_log_content(tmp_path: Path) -> None:
     assert result.code == 2
     assert "jane.fake" not in result.err
     assert "sk_test_FAKE" not in result.err
+
+
+def test_closed_stdout_exits_quietly_with_141() -> None:
+    """``querylens big.log | head`` must not print a BrokenPipeError traceback, and must not
+    reuse exit code 1, which means a --fail-on-* condition triggered."""
+    read_end, write_end = os.pipe()
+    os.close(read_end)  # the reader is already gone, so the first write fails with EPIPE
+    try:
+        completed = subprocess.run(
+            [sys.executable, "-m", "querylens", POSTGRES_SAMPLE],
+            cwd=ROOT,
+            stdout=write_end,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=120,
+        )
+    finally:
+        os.close(write_end)
+    err = completed.stderr.decode()
+    assert "Traceback" not in err
+    assert "BrokenPipeError" not in err
+    assert completed.returncode == 141
