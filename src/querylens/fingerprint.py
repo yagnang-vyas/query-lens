@@ -72,7 +72,17 @@ KEYWORDS = frozenset(
 _SIMPLE_IDENT = re.compile(r"[^\W\d][\w$]*")
 _OP_SPECIAL = frozenset("~!@#%^&|")
 _NEGATABLE_AFTER = frozenset({"(", ",", "["})
-_COLLAPSE_VALUE_WORDS = frozenset({"null", "default", "true", "false"})
+_COLLAPSE_VALUE_WORDS = frozenset(
+    {
+        "null",
+        "default",
+        "true",
+        "false",
+        "current_timestamp",
+        "current_date",
+        "current_time",
+    }
+)
 
 _COMMON_PATTERNS = r"""
     (?P<ws>\s+)
@@ -273,7 +283,8 @@ def collapse_lists(tokens: Sequence[Token]) -> list[Token]:
 
 
 def _match_literal_tuple(tokens: Sequence[Token], start: int, words: frozenset[str]) -> int | None:
-    """Match ``( item [, item]... )`` where every item is a literal (or one of ``words``).
+    """Match ``( item [, item]... )`` where every item is a literal, one of ``words``, or (for
+    ``values``) a call without arguments such as ``now()``.
 
     Returns the index just after the closing parenthesis, or ``None`` if there is no such tuple.
     """
@@ -284,7 +295,11 @@ def _match_literal_tuple(tokens: Sequence[Token], start: int, words: frozenset[s
     while i < len(tokens):
         token = tokens[i]
         if expect_item:
-            if not (token.kind == LITERAL or (token.kind == WORD and token.text in words)):
+            if token.kind == LITERAL or (token.kind == WORD and token.text in words):
+                pass
+            elif words and token.kind == WORD and _is_empty_call(tokens, i):
+                i += 2  # skip the "(" and let the common code skip the ")"
+            else:
                 return None
         elif token.text == ")":
             return i + 1
@@ -293,6 +308,12 @@ def _match_literal_tuple(tokens: Sequence[Token], start: int, words: frozenset[s
         expect_item = not expect_item
         i += 1
     return None
+
+
+def _is_empty_call(tokens: Sequence[Token], index: int) -> bool:
+    return (
+        index + 2 < len(tokens) and tokens[index + 1].text == "(" and tokens[index + 2].text == ")"
+    )
 
 
 def render(tokens: Sequence[Token]) -> str:

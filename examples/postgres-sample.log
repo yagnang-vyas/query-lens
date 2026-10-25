@@ -1,0 +1,133 @@
+2026-10-25 06:29:58.000 UTC [4000] LOG:  database system is ready to accept connections
+2026-10-25 06:30:00.769 UTC [4121] app@shop LOG:  duration: 110.074 ms  statement: SELECT * FROM orders WHERE customer_id = 8229 ORDER BY created_at DESC
+2026-10-25 06:30:03.799 UTC [4122] app@shop LOG:  duration: 719.499 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 12000
+2026-10-25 06:30:07.477 UTC [4123] app@shop LOG:  duration: 39.868 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (382, 'login', now()), (218, 'logout', now()), (369, 'logout', now()), (30, 'login', now())
+2026-10-25 06:30:09.279 UTC [4121] app@shop LOG:  duration: 49.247 ms  statement: SELECT * FROM orders WHERE customer_id = 3213 ORDER BY created_at DESC
+2026-10-25 06:30:10.086 UTC [4122] app@shop LOG:  duration: 165.727 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'frank@example.com'
+2026-10-25 06:30:10.462 UTC [4123] app@shop LOG:  duration: 323.952 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY random() LIMIT 5
+2026-10-25 06:30:11.023 UTC [4121] app@shop LOG:  duration: 145.495 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'ivan@example.com'
+2026-10-25 06:30:11.691 UTC [4122] app@shop LOG:  duration: 228.709 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'grace@example.com'
+2026-10-25 06:30:15.264 UTC [4123] app@shop LOG:  duration: 0.067 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:30:15.264 UTC [4123] app@shop LOG:  duration: 0.087 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:30:15.264 UTC [4123] app@shop LOG:  duration: 6.259 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (3049, 76471, 82339, 62444, 49878, 29273, 54999, 7569)
+2026-10-25 06:30:15.264 UTC [4123] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:30:16.224 UTC [4121] app@shop LOG:  duration: 0.044 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:16.224 UTC [4121] app@shop LOG:  duration: 0.070 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:16.224 UTC [4121] app@shop LOG:  duration: 4.250 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:16.224 UTC [4121] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:17.179 UTC [4122] app@shop LOG:  duration: 0.053 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:30:17.179 UTC [4122] app@shop LOG:  duration: 0.022 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:30:17.179 UTC [4122] app@shop LOG:  duration: 10.132 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (85984, 48254, 9433, 60083, 15071, 69816, 70463)
+2026-10-25 06:30:17.179 UTC [4122] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:30:19.806 UTC [4123] app@shop LOG:  duration: 52.972 ms  statement: SELECT * FROM orders WHERE customer_id = 8269 ORDER BY created_at DESC
+2026-10-25 06:30:20.032 UTC [4121] app@shop LOG:  duration: 75.252 ms  statement: SELECT * FROM orders WHERE customer_id = 4684 ORDER BY created_at DESC
+2026-10-25 06:30:21.558 UTC [4122] app@shop LOG:  duration: 663.641 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%lamp%' AND active = true
+2026-10-25 06:30:24.059 UTC [4123] app@shop LOG:  duration: 1283.484 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 12000
+2026-10-25 06:30:27.243 UTC [4121] app@shop LOG:  duration: 128.717 ms  statement: SELECT * FROM orders WHERE customer_id = 4570 ORDER BY created_at DESC
+2026-10-25 06:30:31.209 UTC [4122] app@shop LOG:  duration: 108.242 ms  statement: SELECT * FROM orders WHERE customer_id = 7949 ORDER BY created_at DESC
+2026-10-25 06:30:31.632 UTC [4123] app@shop LOG:  duration: 10.454 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (491, 'update', now()), (339, 'login', now()), (126, 'update', now()), (317, 'login', now()), (176, 'login', now())
+2026-10-25 06:30:32.440 UTC [4121] app@shop LOG:  duration: 118.367 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'bob@example.com'
+2026-10-25 06:30:33.624 UTC [4122] app@shop LOG:  duration: 0.055 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:30:33.624 UTC [4122] app@shop LOG:  duration: 0.047 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:30:33.624 UTC [4122] app@shop LOG:  duration: 23.060 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (23563, 68888, 87611, 18058, 62094)
+2026-10-25 06:30:33.624 UTC [4122] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:30:34.816 UTC [4123] app@shop LOG:  duration: 147.065 ms  statement: SELECT * FROM orders WHERE customer_id = 1719 ORDER BY created_at DESC
+2026-10-25 06:30:34.816 UTC [4123] app@shop LOG:  duration: 3.141 ms
+2026-10-25 06:30:37.426 UTC [4121] app@shop LOG:  duration: 4.763 ms  statement: SELECT code, label FROM countries
+2026-10-25 06:30:40.789 UTC [4122] app@shop LOG:  duration: 1449.955 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 5000
+2026-10-25 06:30:42.292 UTC [4123] app@shop LOG:  duration: 0.048 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:42.292 UTC [4123] app@shop LOG:  duration: 0.040 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:42.292 UTC [4123] app@shop LOG:  duration: 7.912 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:42.292 UTC [4123] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:44.682 UTC [4121] app@shop LOG:  duration: 616.614 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%mug%' AND active = true
+2026-10-25 06:30:47.385 UTC [4122] app@shop LOG:  duration: 17.968 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (99, 'update', now()), (126, 'update', now()), (371, 'update', now()), (429, 'logout', now())
+2026-10-25 06:30:50.285 UTC [4123] app@shop LOG:  duration: 0.052 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:50.285 UTC [4123] app@shop LOG:  duration: 0.096 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:50.285 UTC [4123] app@shop LOG:  duration: 5.343 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:50.285 UTC [4123] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:50.598 UTC [4121] app@shop LOG:  duration: 0.083 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:50.598 UTC [4121] app@shop LOG:  duration: 0.027 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:50.598 UTC [4121] app@shop LOG:  duration: 4.157 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:50.598 UTC [4121] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:52.348 UTC [4122] app@shop LOG:  duration: 0.021 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:52.348 UTC [4122] app@shop LOG:  duration: 0.051 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:52.348 UTC [4122] app@shop LOG:  duration: 6.768 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:52.348 UTC [4122] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:54.391 UTC [4123] app@shop LOG:  duration: 0.064 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:54.391 UTC [4123] app@shop LOG:  duration: 0.055 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:30:54.391 UTC [4123] app@shop LOG:  duration: 8.891 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:30:54.391 UTC [4123] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:30:55.754 UTC [4121] app@shop LOG:  duration: 318.448 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY random() LIMIT 5
+2026-10-25 06:30:59.444 UTC [4122] app@shop LOG:  duration: 441.307 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%mug%' AND active = true
+2026-10-25 06:31:02.543 UTC [4123] app@shop LOG:  duration: 318.995 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%kettle%' AND active = true
+2026-10-25 06:31:03.749 UTC [4121] app@shop LOG:  duration: 58.069 ms  statement: SELECT * FROM orders WHERE customer_id = 2006 ORDER BY created_at DESC
+2026-10-25 06:31:03.749 UTC [4121] app@shop LOG:  duration: oops ms  statement: SELECT 1
+2026-10-25 06:31:04.380 UTC [4122] app@shop LOG:  duration: 13.983 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (436, 'update', now()), (221, 'login', now()), (39, 'login', now()), (291, 'update', now()), (99, 'update', now())
+2026-10-25 06:31:04.605 UTC [4123] app@shop LOG:  duration: 838.875 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%chair%' AND active = true
+2026-10-25 06:31:07.595 UTC [4121] app@shop LOG:  duration: 716.628 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 40000
+2026-10-25 06:31:11.553 UTC [4122] app@shop LOG:  duration: 1378.709 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 50000
+2026-10-25 06:31:14.535 UTC [4123] app@shop LOG:  duration: 239.294 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'dave@example.com'
+2026-10-25 06:31:16.374 UTC [4121] app@shop LOG:  duration: 203.534 ms  statement: SELECT * FROM orders WHERE customer_id = 2247 ORDER BY created_at DESC
+2026-10-25 06:31:19.793 UTC [4122] app@shop LOG:  duration: 0.036 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:31:19.793 UTC [4122] app@shop LOG:  duration: 0.014 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:31:19.793 UTC [4122] app@shop LOG:  duration: 17.715 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (981, 11609, 11499)
+2026-10-25 06:31:19.793 UTC [4122] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:31:19.793 UTC [4122] app@shop LOG:  checkpoint starting: time
+2026-10-25 06:31:22.076 UTC [4123] app@shop LOG:  duration: 165.018 ms  statement: SELECT * FROM orders WHERE customer_id = 2358 ORDER BY created_at DESC
+2026-10-25 06:31:25.244 UTC [4121] app@shop LOG:  duration: 177.985 ms  statement: SELECT * FROM orders WHERE customer_id = 3363 ORDER BY created_at DESC
+2026-10-25 06:31:28.436 UTC [4122] app@shop LOG:  duration: 105.438 ms  statement: SELECT * FROM orders WHERE customer_id = 7701 ORDER BY created_at DESC
+2026-10-25 06:31:30.153 UTC [4123] app@shop LOG:  duration: 1768.626 ms  statement: UPDATE sessions
+	SET expires_at = now(),
+	    revoked = true -- nightly cleanup
+2026-10-25 06:31:31.613 UTC [4121] app@shop LOG:  duration: 0.068 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:31.613 UTC [4121] app@shop LOG:  duration: 0.080 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:31.613 UTC [4121] app@shop LOG:  duration: 5.462 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:31:31.613 UTC [4121] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:31:32.925 UTC [4122] app@shop LOG:  duration: 0.055 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:32.925 UTC [4122] app@shop LOG:  duration: 0.030 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:32.925 UTC [4122] app@shop LOG:  duration: 7.109 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:31:32.925 UTC [4122] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:31:35.752 UTC [4123] app@shop LOG:  duration: 0.091 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:35.752 UTC [4123] app@shop LOG:  duration: 0.056 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:31:35.752 UTC [4123] app@shop LOG:  duration: 2.236 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:31:35.752 UTC [4123] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:31:38.664 UTC [4121] app@shop LOG:  duration: 265.755 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'frank@example.com'
+2026-10-25 06:31:41.512 UTC [4122] app@shop LOG:  duration: 1324.368 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY id LIMIT 20 OFFSET 40000
+2026-10-25 06:31:45.163 UTC [4123] app@shop LOG:  duration: 115.263 ms  statement: SELECT * FROM orders WHERE customer_id = 5223 ORDER BY created_at DESC
+2026-10-25 06:31:45.163 UTC [4123] app@shop ERROR:  canceling statement due to statement timeout
+2026-10-25 06:31:45.761 UTC [4121] app@shop LOG:  duration: 217.071 ms  statement: SELECT * FROM orders WHERE customer_id = 8934 ORDER BY created_at DESC
+2026-10-25 06:31:46.302 UTC [4122] app@shop LOG:  duration: 0.057 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:31:46.302 UTC [4122] app@shop LOG:  duration: 0.014 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:31:46.302 UTC [4122] app@shop LOG:  duration: 16.089 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (98433, 49894, 81832)
+2026-10-25 06:31:46.302 UTC [4122] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:31:49.994 UTC [4123] app@shop LOG:  duration: 509.488 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY random() LIMIT 5
+2026-10-25 06:31:53.754 UTC [4121] app@shop LOG:  duration: 24.416 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (263, 'login', now()), (337, 'login', now()), (84, 'login', now())
+2026-10-25 06:31:57.745 UTC [4122] app@shop LOG:  duration: 0.027 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:31:57.745 UTC [4122] app@shop LOG:  duration: 0.092 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:31:57.745 UTC [4122] app@shop LOG:  duration: 7.240 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (72389, 92312, 1487, 78169, 95057, 12731, 97681, 15603)
+2026-10-25 06:31:57.745 UTC [4122] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:32:00.367 UTC [4123] app@shop LOG:  duration: 3.349 ms  statement: SELECT code, label FROM countries
+2026-10-25 06:32:01.171 UTC [4121] app@shop LOG:  duration: 413.835 ms  statement: SELECT id, title FROM articles WHERE published = true ORDER BY random() LIMIT 5
+2026-10-25 06:32:04.465 UTC [4122] app@shop LOG:  duration: 354.668 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%poster%' AND active = true
+2026-10-25 06:32:08.312 UTC [4123] app@shop LOG:  duration: 6.534 ms  statement: SELECT code, label FROM countries
+2026-10-25 06:32:10.546 UTC [4121] app@shop LOG:  duration: 3.334 ms  statement: SELECT code, label FROM countries
+2026-10-25 06:32:12.670 UTC [4122] app@shop LOG:  duration: 0.064 ms  parse S_1: SELECT count(*) FROM order_items
+2026-10-25 06:32:12.670 UTC [4122] app@shop LOG:  duration: 0.072 ms  bind S_1: SELECT count(*) FROM order_items
+2026-10-25 06:32:12.670 UTC [4122] app@shop LOG:  duration: 1.303 ms  execute <unnamed>: SELECT count(*) FROM order_items WHERE order_id = $1
+2026-10-25 06:32:12.670 UTC [4122] app@shop DETAIL:  parameters: $1 = '12345'
+2026-10-25 06:32:15.849 UTC [4123] app@shop LOG:  duration: 492.628 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%poster%' AND active = true
+2026-10-25 06:32:19.385 UTC [4121] app@shop LOG:  duration: 246.276 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'alice@example.com'
+2026-10-25 06:32:19.877 UTC [4122] app@shop LOG:  duration: 12.372 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (344, 'logout', now()), (348, 'logout', now()), (199, 'logout', now()), (99, 'logout', now())
+2026-10-25 06:32:21.960 UTC [4123] app@shop LOG:  duration: 19.117 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (273, 'login', now()), (259, 'update', now()), (305, 'logout', now())
+2026-10-25 06:32:22.882 UTC [4121] app@shop LOG:  duration: 0.032 ms  parse S_1: SELECT id, status FROM orders
+2026-10-25 06:32:22.882 UTC [4121] app@shop LOG:  duration: 0.061 ms  bind S_1: SELECT id, status FROM orders
+2026-10-25 06:32:22.882 UTC [4121] app@shop LOG:  duration: 20.710 ms  execute S_1: SELECT id, status FROM orders WHERE id IN (15581, 23774, 37079, 42165, 88710)
+2026-10-25 06:32:22.882 UTC [4121] app@shop DETAIL:  parameters: $1 = 'carol@example.com', $2 = 'FAKE-TOKEN-0000'
+2026-10-25 06:32:26.509 UTC [4122] app@shop LOG:  duration: 120.257 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'dave@example.com'
+2026-10-25 06:32:30.361 UTC [4123] app@shop LOG:  duration: 231.708 ms  statement: SELECT id, email FROM users WHERE lower(email) = 'erin@example.com'
+2026-10-25 06:32:33.410 UTC [4121] app@shop LOG:  duration: 1334.812 ms  statement: UPDATE sessions
+	SET expires_at = now(),
+	    revoked = true -- nightly cleanup
+2026-10-25 06:32:35.370 UTC [4122] app@shop LOG:  duration: 7.551 ms  statement: SELECT code, label FROM countries
+2026-10-25 06:32:39.120 UTC [4123] app@shop LOG:  duration: 421.945 ms  statement: SELECT id, name, price FROM products WHERE name ILIKE '%lamp%' AND active = true
+2026-10-25 06:32:40.833 UTC [4121] app@shop LOG:  duration: 29.198 ms  statement: INSERT INTO audit_log (user_id, action, created_at) VALUES (109, 'login', now()), (489, 'login', now()), (477, 'update', now())

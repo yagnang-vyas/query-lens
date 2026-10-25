@@ -1,0 +1,9 @@
+2026-10-25 06:30:01.000 UTC [11] app@shop LOG:  duration: 120.000 ms  statement: SELECT id FROM users WHERE email = 'jane.fake@example.com' AND api_key = 'sk_test_FAKE_0123456789abcdef'
+2026-10-25 06:30:02.000 UTC [11] app@shop LOG:  duration: 80.000 ms  execute S_1: SELECT id FROM users WHERE email = $1 AND api_key = $2
+2026-10-25 06:30:02.000 UTC [11] app@shop DETAIL:  parameters: $1 = 'jane.fake@example.com', $2 = 'sk_test_FAKE_0123456789abcdef'
+2026-10-25 06:30:03.000 UTC [11] app@shop LOG:  duration: 55.000 ms  statement: SELECT name FROM people WHERE name LIKE '%bob.fake-secret-name' LIMIT 5 OFFSET 7777
+2026-10-25 06:30:04.000 UTC [11] app@shop LOG:  duration: oops ms  statement: SELECT 'malformed-line-secret-FAKE' FROM dual
+2026-10-25 06:30:05.000 UTC [11] app@shop LOG:  duration: 30.000 ms  statement: UPDATE users SET password_hash = 'FAKE-HASH-$2b$12$abcdefghijklmnop' -- reset for jane.fake@example.com
+2026-10-25 06:30:06.000 UTC [11] app@shop ERROR:  duplicate key value violates unique constraint "users_email_key"
+2026-10-25 06:30:06.000 UTC [11] app@shop DETAIL:  Key (email)=(jane.fake@example.com) already exists.
+2026-10-25 06:30:06.000 UTC [11] app@shop STATEMENT:  INSERT INTO users (email) VALUES ('jane.fake@example.com')

@@ -1,0 +1,444 @@
+/usr/sbin/mysqld, Version: 8.0.35 (MySQL Community Server - GPL). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+# Time: 2026-10-25T06:30:03.958000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.011796  Lock_time: 0.00030 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909803;
+INSERT INTO events (user_id, kind, at) VALUES (826, 'view', NOW()), (828, 'view', NOW()), (7, 'view', NOW()), (443, 'view', NOW()), (425, 'view', NOW());
+# Time: 2026-10-25T06:30:07.176000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.001036  Lock_time: 0.00090 Rows_sent: 170  Rows_examined: 170
+use shop;
+SET timestamp=1792909807;
+SELECT code FROM currencies;
+# Time: 2026-10-25T06:30:10.656000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 2.563235  Lock_time: 0.00086 Rows_sent: 0  Rows_examined: 111971
+use shop;
+SET timestamp=1792909810;
+UPDATE carts SET abandoned = 1;
+# Time: 2026-10-25T06:30:11.601000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.753223  Lock_time: 0.00066 Rows_sent: 10  Rows_examined: 68511
+use shop;
+SET timestamp=1792909811;
+SELECT id, name FROM customers WHERE name LIKE '%bob%';
+# Time: 2026-10-25T06:30:15.589000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.051832  Lock_time: 0.00093 Rows_sent: 5  Rows_examined: 154
+use shop;
+SET timestamp=1792909815;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (2551, 82938, 55438, 11752, 11724, 92356) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:30:16.122000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 1.014773  Lock_time: 0.00043 Rows_sent: 10  Rows_examined: 114677
+use shop;
+SET timestamp=1792909816;
+SELECT id, name FROM customers WHERE name LIKE '%dave%';
+# Time: 2026-10-25T06:30:21.103000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.207986  Lock_time: 0.00067 Rows_sent: 35  Rows_examined: 22841
+use shop;
+SET timestamp=1792909821;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-06';
+# Time: 2026-10-25T06:30:25.389000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.395554  Lock_time: 0.00065 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909825;
+SELECT id, title FROM posts ORDER BY id LIMIT 8000, 20;
+# Time: 2026-10-25T06:30:30.173000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.000931  Lock_time: 0.00065 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909830;
+SELECT id, email FROM users WHERE id = 23944;
+# Time: 2026-10-25T06:30:31.262000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.263726  Lock_time: 0.00097 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909831;
+SELECT id, title FROM posts ORDER BY id LIMIT 3000, 20;
+# Time: 2026-10-25T06:30:33.715000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.191236  Lock_time: 0.00098 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909833;
+SELECT id, title FROM posts ORDER BY id LIMIT 20000, 20;
+# Time: 2026-10-25T06:30:33.999999Z
+# User@Host: app[app] @ localhost []  Id:   99
+# Query_time: 0.000050  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1792909833;
+# administrator command: Quit;
+# Time: 2026-10-25T06:30:38.182000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 1.489715  Lock_time: 0.00080 Rows_sent: 72  Rows_examined: 495632
+use shop;
+SET timestamp=1792909838;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'us';
+# Time: 2026-10-25T06:30:42.427000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.010316  Lock_time: 0.00062 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909842;
+INSERT INTO events (user_id, kind, at) VALUES (861, 'view', NOW()), (649, 'view', NOW());
+# Time: 2026-10-25T06:30:44.716000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.016141  Lock_time: 0.00019 Rows_sent: 4  Rows_examined: 96
+use shop;
+SET timestamp=1792909844;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (47136, 92651, 60493, 31960, 69642) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:30:45.231000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.335996  Lock_time: 0.00070 Rows_sent: 7  Rows_examined: 81782
+use shop;
+SET timestamp=1792909845;
+SELECT id, name FROM customers WHERE name LIKE '%carol%';
+# Time: 2026-10-25T06:30:49.512000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 1.830347  Lock_time: 0.00098 Rows_sent: 54  Rows_examined: 669525
+use shop;
+SET timestamp=1792909849;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'us';
+# Time: 2026-10-25T06:30:53.977000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.029706  Lock_time: 0.00066 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909853;
+INSERT INTO events (user_id, kind, at) VALUES (325, 'view', NOW()), (355, 'view', NOW()), (1, 'view', NOW()), (269, 'view', NOW());
+# Time: 2026-10-25T06:30:56.736000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.883821  Lock_time: 0.00096 Rows_sent: 3  Rows_examined: 59280
+use shop;
+SET timestamp=1792909856;
+SELECT id, total FROM orders ORDER BY RAND() LIMIT 3;
+# Time: 2026-10-25T06:31:00.171000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.894417  Lock_time: 0.00049 Rows_sent: 58  Rows_examined: 542174
+use shop;
+SET timestamp=1792909860;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'us';
+# Time: 2026-10-25T06:31:04.475000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.001547  Lock_time: 0.00066 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909864;
+SELECT id, email FROM users WHERE id = 44837;
+# Time: 2026-10-25T06:31:06.381000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 3.103854  Lock_time: 0.00057 Rows_sent: 0  Rows_examined: 125080
+use shop;
+SET timestamp=1792909866;
+UPDATE carts SET abandoned = 1;
+# Time: 2026-10-25T06:31:09.511000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.073864  Lock_time: 0.00024 Rows_sent: 5  Rows_examined: 133
+use shop;
+SET timestamp=1792909869;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (39363, 92240, 76304) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:31:10.127000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.334075  Lock_time: 0.00013 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909870;
+SELECT id, title FROM posts ORDER BY id LIMIT 20000, 20;
+# Time: 2026-10-25T06:31:12.856000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.262489  Lock_time: 0.00046 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909872;
+SELECT id, title FROM posts ORDER BY id LIMIT 20000, 20;
+# Time: 2026-10-25T06:31:14.110000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.001119  Lock_time: 0.00028 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909874;
+SELECT id, email FROM users WHERE id = 28883;
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.003639  Lock_time: 0.00038 Rows_sent: 170  Rows_examined: 170
+use shop;
+SET timestamp=1792909876;
+SELECT code FROM currencies;
+# Time: 2026-10-25T06:31:16.896000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.282270  Lock_time: 0.00069 Rows_sent: 75  Rows_examined: 24030
+use shop;
+SET timestamp=1792909876;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-06';
+# Time: 2026-10-25T06:31:17.884000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.000727  Lock_time: 0.00031 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909877;
+SELECT id, email FROM users WHERE id = 35196;
+# Time: 2026-10-25T06:31:21.507000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.001684  Lock_time: 0.00013 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909881;
+SELECT id, email FROM users WHERE id = 41151;
+# Time: 2026-10-25T06:31:22.446000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.527259  Lock_time: 0.00093 Rows_sent: 3  Rows_examined: 58446
+use shop;
+SET timestamp=1792909882;
+SELECT id, total FROM orders ORDER BY RAND() LIMIT 3;
+# Time: 2026-10-25T06:31:27.430000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 1.008110  Lock_time: 0.00074 Rows_sent: 24  Rows_examined: 87191
+use shop;
+SET timestamp=1792909887;
+SELECT id, name FROM customers WHERE name LIKE '%heidi%';
+# Time: 2026-10-25T06:31:27.999999Z
+# User@Host: app[app] @ localhost []  Id:   98
+# Query_time: oops  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1792909887;
+SELECT 1;
+# Time: 2026-10-25T06:31:30.750000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.059905  Lock_time: 0.00062 Rows_sent: 5  Rows_examined: 177
+use shop;
+SET timestamp=1792909890;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (12253, 75614, 54457, 80759) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:31:34.599000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.004129  Lock_time: 0.00096 Rows_sent: 170  Rows_examined: 170
+use shop;
+SET timestamp=1792909894;
+SELECT code FROM currencies;
+# Time: 2026-10-25T06:31:36.413000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.001033  Lock_time: 0.00069 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909896;
+SELECT id, email FROM users WHERE id = 31964;
+# Time: 2026-10-25T06:31:39.656000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.000877  Lock_time: 0.00054 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909899;
+SELECT id, email FROM users WHERE id = 68267;
+# Time: 2026-10-25T06:31:42.347000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.440522  Lock_time: 0.00014 Rows_sent: 62  Rows_examined: 23803
+use shop;
+SET timestamp=1792909902;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-19';
+# Time: 2026-10-25T06:31:46.710000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.141640  Lock_time: 0.00067 Rows_sent: 32  Rows_examined: 24495
+use shop;
+SET timestamp=1792909906;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-07';
+# Time: 2026-10-25T06:31:51.194000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.188535  Lock_time: 0.00069 Rows_sent: 79  Rows_examined: 26026
+use shop;
+SET timestamp=1792909911;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-16';
+# Time: 2026-10-25T06:31:56.150000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 1.363496  Lock_time: 0.00063 Rows_sent: 62  Rows_examined: 568617
+use shop;
+SET timestamp=1792909916;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'apac';
+# Time: 2026-10-25T06:31:58.283000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.471871  Lock_time: 0.00079 Rows_sent: 30  Rows_examined: 20138
+use shop;
+SET timestamp=1792909918;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-16';
+# Time: 2026-10-25T06:32:00.775000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.000472  Lock_time: 0.00094 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909920;
+SELECT id, email FROM users WHERE id = 36331;
+# Time: 2026-10-25T06:32:01.171000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.018247  Lock_time: 0.00029 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909921;
+INSERT INTO events (user_id, kind, at) VALUES (565, 'view', NOW()), (151, 'view', NOW()), (218, 'view', NOW());
+# Time: 2026-10-25T06:32:04.169000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 2.408590  Lock_time: 0.00034 Rows_sent: 239  Rows_examined: 884014
+use shop;
+SET timestamp=1792909924;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:07.861000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.000962  Lock_time: 0.00054 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909927;
+SELECT id, email FROM users WHERE id = 81903;
+# Time: 2026-10-25T06:32:11.407000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.082543  Lock_time: 0.00020 Rows_sent: 4  Rows_examined: 80
+use shop;
+SET timestamp=1792909931;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (66959, 9256, 29123, 21745) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:32:13.332000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.000702  Lock_time: 0.00092 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909933;
+SELECT id, email FROM users WHERE id = 43297;
+# Time: 2026-10-25T06:32:14.323000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 2.099242  Lock_time: 0.00087 Rows_sent: 342  Rows_examined: 668416
+use shop;
+SET timestamp=1792909934;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:15.574000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.071640  Lock_time: 0.00090 Rows_sent: 4  Rows_examined: 104
+use shop;
+SET timestamp=1792909935;
+SELECT o.id, c.name
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+WHERE o.id IN (53029, 81455) AND o.created_at > '2026-10-01 00:00:00';
+# Time: 2026-10-25T06:32:17.510000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.964395  Lock_time: 0.00038 Rows_sent: 186  Rows_examined: 803326
+use shop;
+SET timestamp=1792909937;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:20.079000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 0.000477  Lock_time: 0.00055 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909940;
+SELECT id, email FROM users WHERE id = 24516;
+# Time: 2026-10-25T06:32:24.316000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.001234  Lock_time: 0.00036 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909944;
+SELECT id, email FROM users WHERE id = 76736;
+# Time: 2026-10-25T06:32:25.771000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 2.402841  Lock_time: 0.00022 Rows_sent: 192  Rows_examined: 651791
+use shop;
+SET timestamp=1792909945;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:28.130000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.028640  Lock_time: 0.00095 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909948;
+INSERT INTO events (user_id, kind, at) VALUES (549, 'view', NOW()), (163, 'view', NOW()), (720, 'view', NOW()), (410, 'view', NOW()), (572, 'view', NOW()), (872, 'view', NOW());
+# Time: 2026-10-25T06:32:28.953000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.001378  Lock_time: 0.00081 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909948;
+SELECT id, email FROM users WHERE id = 78676;
+# Time: 2026-10-25T06:32:29.260000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.780018  Lock_time: 0.00095 Rows_sent: 21  Rows_examined: 91315
+use shop;
+SET timestamp=1792909949;
+SELECT id, name FROM customers WHERE name LIKE '%ivan%';
+# Time: 2026-10-25T06:32:32.888000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.638338  Lock_time: 0.00084 Rows_sent: 8  Rows_examined: 76498
+use shop;
+SET timestamp=1792909952;
+SELECT id, name FROM customers WHERE name LIKE '%ivan%';
+# Time: 2026-10-25T06:32:35.910000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 1.992729  Lock_time: 0.00041 Rows_sent: 344  Rows_examined: 774792
+use shop;
+SET timestamp=1792909955;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:40.147000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.188400  Lock_time: 0.00063 Rows_sent: 20  Rows_examined: 20
+use shop;
+SET timestamp=1792909960;
+SELECT id, title FROM posts ORDER BY id LIMIT 8000, 20;
+# Time: 2026-10-25T06:32:43.655000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 0.181649  Lock_time: 0.00079 Rows_sent: 65  Rows_examined: 27834
+use shop;
+SET timestamp=1792909963;
+SELECT id, sku FROM products WHERE DATE(created_at) = '2026-10-15';
+# Time: 2026-10-25T06:32:46.792000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.739016  Lock_time: 0.00059 Rows_sent: 17  Rows_examined: 87931
+use shop;
+SET timestamp=1792909966;
+SELECT id, name FROM customers WHERE name LIKE '%frank%';
+# Time: 2026-10-25T06:32:48.637000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.001180  Lock_time: 0.00064 Rows_sent: 1  Rows_examined: 1
+use shop;
+SET timestamp=1792909968;
+SELECT id, email FROM users WHERE id = 53224;
+# Time: 2026-10-25T06:32:51.609000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 2.153929  Lock_time: 0.00024 Rows_sent: 371  Rows_examined: 846931
+use shop;
+SET timestamp=1792909971;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'eu';
+# Time: 2026-10-25T06:32:55.250000Z
+# User@Host: app[app] @ localhost []  Id:  106
+# Query_time: 0.011060  Lock_time: 0.00052 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1792909975;
+INSERT INTO events (user_id, kind, at) VALUES (520, 'view', NOW()), (309, 'view', NOW()), (553, 'view', NOW()), (298, 'view', NOW()), (828, 'view', NOW()), (871, 'view', NOW());
+# Time: 2026-10-25T06:32:55.971000Z
+# User@Host: app[app] @ localhost []  Id:  100
+# Query_time: 1.768321  Lock_time: 0.00070 Rows_sent: 141  Rows_examined: 555054
+use shop;
+SET timestamp=1792909975;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'us';
+# Time: 2026-10-25T06:32:59.403000Z
+# User@Host: app[app] @ localhost []  Id:  101
+# Query_time: 0.710206  Lock_time: 0.00029 Rows_sent: 3  Rows_examined: 54477
+use shop;
+SET timestamp=1792909979;
+SELECT id, total FROM orders ORDER BY RAND() LIMIT 3;
+# Time: 2026-10-25T06:33:01.667000Z
+# User@Host: app[app] @ localhost []  Id:  102
+# Query_time: 1.378197  Lock_time: 0.00045 Rows_sent: 218  Rows_examined: 426640
+use shop;
+SET timestamp=1792909981;
+SELECT * FROM orders WHERE status = 'pending' AND region = 'us';
+# Time: 2026-10-25T06:33:02.607000Z
+# User@Host: app[app] @ localhost []  Id:  103
+# Query_time: 0.903234  Lock_time: 0.00035 Rows_sent: 20  Rows_examined: 104907
+use shop;
+SET timestamp=1792909982;
+SELECT id, name FROM customers WHERE name LIKE '%bob%';
+# Time: 2026-10-25T06:33:03.075000Z
+# User@Host: app[app] @ localhost []  Id:  104
+# Query_time: 0.469216  Lock_time: 0.00063 Rows_sent: 3  Rows_examined: 57722
+use shop;
+SET timestamp=1792909983;
+SELECT id, total FROM orders ORDER BY RAND() LIMIT 3;
+# Time: 2026-10-25T06:33:06.433000Z
+# User@Host: app[app] @ localhost []  Id:  105
+# Query_time: 0.002548  Lock_time: 0.00083 Rows_sent: 170  Rows_examined: 170
+use shop;
+SET timestamp=1792909986;
+SELECT code FROM currencies;

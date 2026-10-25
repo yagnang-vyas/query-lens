@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "tool": {
+    "name": "querylens",
+    "version": "0.1.0"
+  },
+  "input": {
+    "format": "mysql",
+    "files": [
+      "examples/mysql-slow-sample.log"
+    ],
+    "entries": 69,
+    "malformed": 1,
+    "duration_only": 0,
+    "skipped_phase": 1,
+    "filtered_out": 0
+  },
+  "summary": {
+    "total_ms": 39217.836,
+    "unique_fingerprints": 10,
+    "sort": "total",
+    "top": 100
+  },
+  "fingerprints": [
+    {
+      "id": "2930167ebffe",
+      "query": "select * from orders where status = ? and region = ?",
+      "count": 12,
+      "total_ms": 20746.219,
+      "mean_ms": 1728.852,
+      "p50_ms": 1768.321,
+      "p95_ms": 2408.59,
+      "max_ms": 2408.59,
+      "share_pct": 52.9,
+      "rows_sent_total": 2279,
+      "rows_examined_total": 7886912,
+      "examined_per_sent": 3460.69,
+      "hints": [
+        "QL001",
+        "QL007"
+      ]
+    },
+    {
+      "id": "2517715167e6",
+      "query": "select id, name from customers where name like ?",
+      "count": 8,
+      "total_ms": 6172.708,
+      "mean_ms": 771.588,
+      "p50_ms": 753.223,
+      "p95_ms": 1014.773,
+      "max_ms": 1014.773,
+      "share_pct": 15.74,
+      "rows_sent_total": 117,
+      "rows_examined_total": 712812,
+      "examined_per_sent": 6092.41,
+      "hints": [
+        "QL003",
+        "QL007"
+      ]
+    },
+    {
+      "id": "05580842ce5a",
+      "query": "update carts set abandoned = ?",
+      "count": 2,
+      "total_ms": 5667.089,
+      "mean_ms": 2833.544,
+      "p50_ms": 2563.235,
+      "p95_ms": 3103.854,
+      "max_ms": 3103.854,
+      "share_pct": 14.45,
+      "rows_sent_total": 0,
+      "rows_examined_total": 237051,
+      "examined_per_sent": null,
+      "hints": [
+        "QL002"
+      ]
+    },
+    {
+      "id": "4d0564573bc0",
+      "query": "select id, total from orders order by rand() limit ?",
+      "count": 4,
+      "total_ms": 2590.502,
+      "mean_ms": 647.625,
+      "p50_ms": 527.259,
+      "p95_ms": 883.821,
+      "max_ms": 883.821,
+      "share_pct": 6.61,
+      "rows_sent_total": 12,
+      "rows_examined_total": 229925,
+      "examined_per_sent": 19160.42,
+      "hints": [
+        "QL005",
+        "QL007"
+      ]
+    },
+    {
+      "id": "6a38c0b7b2f4",
+      "query": "select id, sku from products where date(created_at) = ?",
+      "count": 7,
+      "total_ms": 1914.473,
+      "mean_ms": 273.496,
+      "p50_ms": 207.986,
+      "p95_ms": 471.871,
+      "max_ms": 471.871,
+      "share_pct": 4.88,
+      "rows_sent_total": 378,
+      "rows_examined_total": 169167,
+      "examined_per_sent": 447.53,
+      "hints": [
+        "QL006"
+      ]
+    },
+    {
+      "id": "28c81bcaa6b3",
+      "query": "select id, title from posts order by id limit ?, ?",
+      "count": 6,
+      "total_ms": 1635.48,
+      "mean_ms": 272.58,
+      "p50_ms": 262.489,
+      "p95_ms": 395.554,
+      "max_ms": 395.554,
+      "share_pct": 4.17,
+      "rows_sent_total": 120,
+      "rows_examined_total": 120,
+      "examined_per_sent": 1.0,
+      "hints": [
+        "QL004"
+      ]
+    },
+    {
+      "id": "bf601e388f7b",
+      "query": "select o.id, c.name from orders o join customers c on c.id = o.customer_id where o.id in (?+) and o.created_at > ?",
+      "count": 6,
+      "total_ms": 355.925,
+      "mean_ms": 59.321,
+      "p50_ms": 59.905,
+      "p95_ms": 82.543,
+      "max_ms": 82.543,
+      "share_pct": 0.91,
+      "rows_sent_total": 27,
+      "rows_examined_total": 744,
+      "examined_per_sent": 27.56,
+      "hints": []
+    },
+    {
+      "id": "c5d9f71b3a16",
+      "query": "insert into events (user_id, kind, at) values (?+)",
+      "count": 6,
+      "total_ms": 109.765,
+      "mean_ms": 18.294,
+      "p50_ms": 11.796,
+      "p95_ms": 29.706,
+      "max_ms": 29.706,
+      "share_pct": 0.28,
+      "rows_sent_total": 0,
+      "rows_examined_total": 0,
+      "examined_per_sent": null,
+      "hints": []
+    },
+    {
+      "id": "ea569b9ab856",
+      "query": "select id, email from users where id = ?",
+      "count": 14,
+      "total_ms": 14.323,
+      "mean_ms": 1.023,
+      "p50_ms": 0.962,
+      "p95_ms": 1.684,
+      "max_ms": 1.684,
+      "share_pct": 0.04,
+      "rows_sent_total": 14,
+      "rows_examined_total": 14,
+      "examined_per_sent": 1.0,
+      "hints": []
+    },
+    {
+      "id": "2e556f47fbb1",
+      "query": "select code from currencies",
+      "count": 4,
+      "total_ms": 11.352,
+      "mean_ms": 2.838,
+      "p50_ms": 2.548,
+      "p95_ms": 4.129,
+      "max_ms": 4.129,
+      "share_pct": 0.03,
+      "rows_sent_total": 680,
+      "rows_examined_total": 680,
+      "examined_per_sent": 1.0,
+      "hints": [
+        "QL008"
+      ]
+    }
+  ],
+  "hints": {
+    "QL001": {
+      "title": "SELECT *",
+      "description": "Heuristic: the select list contains * or table.*, which reads every column and breaks covering indexes. It cannot know whether you really need all columns."
+    },
+    "QL002": {
+      "title": "Unfiltered write",
+      "description": "Heuristic: an UPDATE or DELETE has no top-level WHERE clause and touches every row. It is sometimes intentional (maintenance jobs) and statements starting with WITH are not inspected."
+    },
+    "QL003": {
+      "title": "Leading-wildcard LIKE",
+      "description": "Heuristic: LIKE/ILIKE with a literal pattern starting with %, which usually prevents B-tree index use. Patterns built at runtime (CONCAT, ||, parameters) are not detected."
+    },
+    "QL004": {
+      "title": "Large OFFSET",
+      "description": "Heuristic: a literal OFFSET (or MySQL LIMIT offset, count) above 1000; the database must read and discard all skipped rows. Offsets passed as parameters are not detected."
+    },
+    "QL005": {
+      "title": "Random ordering",
+      "description": "Heuristic: ORDER BY RAND() / RANDOM() sorts the whole result set; the cost grows with table size even when only a few rows are returned."
+    },
+    "QL006": {
+      "title": "Function on filtered column",
+      "description": "Heuristic: a column is wrapped in LOWER, UPPER, DATE, CAST, COALESCE or EXTRACT inside a WHERE/AND/OR comparison, which can prevent plain index use. An expression index may make it fine."
+    },
+    "QL007": {
+      "title": "High rows examined",
+      "description": "Heuristic (MySQL only): total Rows_examined divided by total Rows_sent exceeds 1000, suggesting a missing or unused index. Computed per fingerprint from log counters, not from a query plan."
+    },
+    "QL008": {
+      "title": "Unbounded SELECT",
+      "description": "Heuristic: a non-aggregate SELECT ... FROM with no WHERE and no LIMIT returns every row. Fine for small lookup tables; statements starting with WITH are not inspected."
+    }
+  }
+}

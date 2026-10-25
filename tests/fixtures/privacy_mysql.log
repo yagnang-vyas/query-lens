@@ -1,0 +1,17 @@
+# Time: 2026-10-25T06:30:01.000000Z
+# User@Host: app[app] @ localhost []  Id:    12
+# Query_time: 1.500000  Lock_time: 0.000100 Rows_sent: 1  Rows_examined: 5000
+use shop;
+SET timestamp=1792909801;
+SELECT id FROM users WHERE email = 'jane.fake@example.com' AND api_key = 'sk_test_FAKE_0123456789abcdef';
+# Time: 2026-10-25T06:30:02.000000Z
+# User@Host: app[app] @ localhost []  Id:    12
+# Query_time: oops  Lock_time: 0.000100 Rows_sent: 1  Rows_examined: 5000
+SELECT 'malformed-entry-secret-FAKE' FROM dual;
+# Time: 2026-10-25T06:30:03.000000Z
+# User@Host: app[app] @ localhost []  Id:    12
+# Query_time: 0.700000  Lock_time: 0.000100 Rows_sent: 3  Rows_examined: 30
+SELECT name
+  FROM people
+ WHERE name LIKE '%bob.fake-secret-name' # hash comment with jane.fake@example.com
+ LIMIT 9000, 10;
