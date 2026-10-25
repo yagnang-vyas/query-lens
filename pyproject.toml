@@ -42,8 +42,8 @@ dev = [
 querylens = "querylens.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/ChakraCoder/querylens"
-Issues = "https://github.com/ChakraCoder/querylens/issues"
+Homepage = "https://github.com/ChakraCoder/query-lens"
+Issues = "https://github.com/ChakraCoder/query-lens/issues"
 
 [tool.hatch.version]
 path = "src/querylens/__init__.py"

@@ -1,6 +1,6 @@
 # QueryLens
 
-[![CI](https://github.com/ChakraCoder/querylens/actions/workflows/ci.yml/badge.svg)](https://github.com/ChakraCoder/querylens/actions/workflows/ci.yml)
+[![CI](https://github.com/ChakraCoder/query-lens/actions/workflows/ci.yml/badge.svg)](https://github.com/ChakraCoder/query-lens/actions/workflows/ci.yml)
 
 QueryLens reads PostgreSQL and MySQL slow query logs offline and tells you which query *shapes* cost the most database time, with transparent, heuristic hints about common anti-patterns.
 
@@ -25,8 +25,8 @@ A slow query log holds thousands of near-identical entries that differ only in t
 QueryLens is **not on PyPI yet**. Install it from a clone:
 
 ```bash
-git clone https://github.com/ChakraCoder/querylens.git
-cd querylens
+git clone https://github.com/ChakraCoder/query-lens.git
+cd query-lens
 pipx install .          # or: python -m venv .venv && . .venv/bin/activate && pip install .
 querylens --version
 ```
