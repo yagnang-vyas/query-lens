@@ -1,0 +1,13 @@
+{
+  "name": "querylens-web-tests",
+  "private": true,
+  "description": "Dev-only tooling for the QueryLens browser demo tests. The site itself has no npm dependencies.",
+  "scripts": {
+    "build:local": "QUERYLENS_PYODIDE_DIR=node_modules/pyodide python3 build.py",
+    "test:e2e": "npm run build:local && node tests/e2e.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0",
+    "pyodide": "0.27.7"
+  }
+}

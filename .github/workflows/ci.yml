@@ -30,3 +30,23 @@ jobs:
         run: make install
       - name: Check
         run: make check
+
+  web:
+    name: Web demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install
+        working-directory: web
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Build and test in the browser
+        working-directory: web
+        run: npm run test:e2e
