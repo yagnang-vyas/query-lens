@@ -138,3 +138,19 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
    via `[tool.hatch.version]`, so it is defined once.
 3. **Makefile tools.** `make install` uses `$(PYTHON) -m pip`; the other targets call `ruff`,
    `mypy` and `pytest` from the active virtual environment, exactly as in the brief.
+4. **Continuation lines are joined with `\n`, not a single space.** The brief says to append
+   PostgreSQL continuation lines "with a single space". Joining with a space would let a `-- note`
+   comment swallow the rest of a multi-line statement. Newlines normalize to exactly the same shape
+   in every other case, so `\n` is the more conservative choice.
+5. **auto_explain `duration: X ms  plan:` messages** count as `skipped_phase` (the statement is
+   already timed by its own duration line, and plan text is not a query).
+6. **Duration parsing.** PostgreSQL durations must match `\d+(\.\d+)?`; anything else
+   (`abc`, `-4`, `nan`) is `malformed`. MySQL `Query_time` accepts decimals and exponents, is
+   converted with `Decimal` so `2.000123` s is exactly `2000.123` ms, and non-finite values are
+   `malformed`.
+7. **MySQL entries lacking a `# Query_time:` line** (header-only blocks or a statement without
+   timing) count as `malformed`; `# administrator command:` entries count as `skipped_phase`.
+   Once a statement has started, further `#` lines are treated as SQL comments, except
+   `# Time:`, `# User@Host:` and `# Query_time:`, which open a new entry.
+8. **MySQL timestamp fallback.** When `# Time:` is absent, the `SET timestamp=` epoch is converted
+   to an ISO-8601 UTC string.
