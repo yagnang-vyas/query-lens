@@ -12,6 +12,7 @@ plans, so they can be wrong in both directions.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
@@ -122,9 +123,13 @@ def leading_wildcard_like(tokens: Sequence[Token]) -> bool:
     return False
 
 
+#: Opening of a string literal: an optional prefix (E, N, B, X), then ', " (MySQL) or $tag$.
+_LITERAL_OPENING = re.compile(r"[A-Za-z]*(?:'|\"|\$(?:[^\W\d]\w*)?\$)")
+
+
 def _literal_starts_with_wildcard(raw: str) -> bool:
-    quote = raw.find("'")
-    return quote != -1 and raw[quote + 1 : quote + 2] == "%"
+    opening = _LITERAL_OPENING.match(raw)
+    return opening is not None and raw[opening.end() : opening.end() + 1] == "%"
 
 
 # --- QL004 -----------------------------------------------------------------------------------

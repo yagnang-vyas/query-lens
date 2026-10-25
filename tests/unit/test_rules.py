@@ -1,6 +1,6 @@
 import pytest
 
-from querylens.fingerprint import tokenize
+from querylens.fingerprint import Dialect, tokenize
 from querylens.rules import HINTS, RULES, evaluate, high_rows_examined
 
 
@@ -103,3 +103,19 @@ def test_ql007_threshold() -> None:
     assert high_rows_examined(1000.5)
     assert not high_rows_examined(1000.0)
     assert not high_rows_examined(None)
+
+
+@pytest.mark.parametrize(
+    ("sql", "dialect"),
+    [
+        ('select a from t where name like "%smith"', "mysql"),
+        ("select a from t where name like $$%smith$$", "postgres"),
+        ("select a from t where name like $p$%smith$p$", "postgres"),
+    ],
+)
+def test_ql003_detects_other_string_quoting(sql: str, dialect: Dialect) -> None:
+    assert "QL003" in set(evaluate(tokenize(sql, dialect)))
+
+
+def test_ql003_ignores_wildcard_not_at_start_in_other_quoting() -> None:
+    assert "QL003" not in set(evaluate(tokenize('select a from t where n like "s%"', "mysql")))
