@@ -27,4 +27,4 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Synthetic PostgreSQL and MySQL sample logs, golden-file tests and GitHub Actions CI for Python
   3.10 to 3.14.
 
-[0.1.0]: https://github.com/yagnang-vyass/query-lens/releases/tag/v0.1.0
+[0.1.0]: https://github.com/yagnang-vyas/query-lens/releases/tag/v0.1.0
