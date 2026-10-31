@@ -76,11 +76,11 @@ def test_build_assembles_site(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setattr(build, "DIST", tmp_path / "dist")
     monkeypatch.delenv("QUERYLENS_PYODIDE_DIR", raising=False)
     dist = build.build()
-    for name in (*build.PAGE_FILES, "config.json", "querylens.zip", "samples/postgres-sample.log"):
+    for name in (*build.PAGE_FILES, "config.json", "slowlens.zip", "samples/postgres-sample.log"):
         assert (dist / name).is_file(), name
     config = json.loads((dist / "config.json").read_text(encoding="utf-8"))
     assert config["pyodideBase"] == build.PYODIDE_CDN
-    with zipfile.ZipFile(dist / "querylens.zip") as archive:
+    with zipfile.ZipFile(dist / "slowlens.zip") as archive:
         names = archive.namelist()
-    assert "querylens/cli.py" in names
+    assert "slowlens/cli.py" in names
     assert not any("__pycache__" in name for name in names)

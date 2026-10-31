@@ -9,7 +9,7 @@ import zlib
 from collections.abc import Iterator
 from typing import TextIO, cast
 
-from querylens.errors import InputError
+from slowlens.errors import InputError
 
 STDIN = "-"
 _GZIP_MAGIC = b"\x1f\x8b"
@@ -24,7 +24,7 @@ def open_lines(path: str) -> Iterator[str]:
     """Open ``path`` (``-`` for stdin) and return an iterator of lines without line endings.
 
     The file is opened immediately, so a missing or unreadable file raises
-    :class:`~querylens.errors.InputError` here rather than on first iteration. Gzip is detected by
+    :class:`~slowlens.errors.InputError` here rather than on first iteration. Gzip is detected by
     magic bytes, text is decoded as UTF-8 with ``errors="replace"`` and CRLF is normalized.
     """
     is_stdin = path == STDIN

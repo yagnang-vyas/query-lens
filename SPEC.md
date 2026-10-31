@@ -28,12 +28,15 @@ as text, JSON or Markdown. Exit codes make it usable as a CI gate.
 ## Interface
 
 ```
-querylens [-h] [--version] [--format {auto,postgres,mysql}]
-          [--output {text,json,markdown}] [--top N]
-          [--sort {total,mean,count,p95,max}] [--min-duration MS]
-          [--fail-on-hint IDS] [--fail-over-ms MS]
-          FILE [FILE ...]
+slowlens [-h] [--version] [--format {auto,postgres,mysql}]
+         [--output {text,json,markdown}] [--top N]
+         [--sort {total,mean,count,p95,max}] [--min-duration MS]
+         [--fail-on-hint IDS] [--fail-over-ms MS]
+         FILE [FILE ...]
 ```
+
+Product branding is **QueryLens**. The PyPI project, import package and CLI command are
+**`slowlens`**. The GitHub repository remains `query-lens`.
 
 | Exit code | Meaning |
 |---|---|
@@ -87,14 +90,14 @@ inputs.py  ──lines──▶  parsers/{postgres,mysql}.py  ──LogEntry─�
 - [x] Privacy: a fake email, a fake API-key-like string and a `DETAIL: parameters:` line never
       appear in any output format.
 - [x] `make check` passes: ruff, ruff format, mypy strict, pytest with ≥90% branch coverage.
-- [x] `pip install .` into a fresh virtual environment works and `querylens` runs.
+- [x] `pip install .` into a fresh virtual environment works and `slowlens` runs.
 - [x] Zero runtime dependencies.
 
 ## Test plan
 
 - **Unit** (`tests/unit/`): fingerprint rules and edge cases, both parsers, format detection,
   inputs (gzip, stdin, missing file, invalid UTF-8), statistics, every hint rule, report renderers.
-- **Integration** (`tests/integration/`): run `python -m querylens` in a subprocess against the
+- **Integration** (`tests/integration/`): run `python -m slowlens` in a subprocess against the
   fixtures; compare JSON with `tests/golden/*.json` (regenerate with `UPDATE_GOLDEN=1 pytest`);
   structural assertions on text and Markdown; every exit code; `.gz` and stdin; privacy.
 - **CI**: GitHub Actions on Python 3.10–3.14 runs `make install` and `make check`.
@@ -135,7 +138,7 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
 
 1. **Local development Python.** Development used Python 3.13; CI covers 3.10–3.14 and the code
    targets 3.10 (ruff `target-version = "py310"`, mypy `python_version = "3.10"`).
-2. **Version single-sourcing.** `pyproject.toml` reads the version from `src/querylens/__init__.py`
+2. **Version single-sourcing.** `pyproject.toml` reads the version from `src/slowlens/__init__.py`
    via `[tool.hatch.version]`, so it is defined once.
 3. **Makefile tools.** `make install` uses `$(PYTHON) -m pip`; the other targets call `ruff`,
    `mypy` and `pytest` from the active virtual environment, exactly as in the brief.
@@ -176,7 +179,7 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
     (`Yagnang Vyas <168338381+ChakraCoder@users.noreply.github.com>`), which is not a global git
     setting. Change it with `git rebase` / `git commit --amend --reset-author` before publishing
     if you prefer another address.
-17. **Exit code 141 for a closed output pipe.** `querylens big.log | head` used to end with a
+17. **Exit code 141 for a closed output pipe.** `slowlens big.log | head` used to end with a
     `BrokenPipeError` traceback and exit code 1, which collides with "a fail condition
     triggered". QueryLens now redirects stdout to `/dev/null` and exits 141 (128 + `SIGPIPE`), the
     code shells report for other tools in the same situation.
@@ -193,6 +196,10 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
     `RELEASING.md`. The browser demo remains on Netlify and is independent of the PyPI upload.
 21. **v0.1.0 remains the first PyPI version.** Packaging and release-tooling docs do not bump the
     package version; `__version__` stays `0.1.0` until a deliberate SemVer change.
-22. **PyPI distribution name is `query-lens`.** The bare name `querylens` is already taken on PyPI
-    by an unrelated project. The import package and console script remain `querylens`
-    (`pip install query-lens` then run `querylens`).
+22. **Public technical name is `slowlens`.** Product branding remains QueryLens. The PyPI
+    project, import package and console script are `slowlens` (`pip install slowlens` then run
+    `slowlens`) because `querylens` / `query-lens` are blocked or taken on PyPI. The GitHub
+    repository stays `query-lens`. Exception type `QueryLensError` keeps the product name.
+23. **Broken pipe on Windows.** A closed stdout pipe raises `BrokenPipeError` on Unix but often
+    `OSError` with `errno.EINVAL` on Windows. Both are mapped to exit code 141 after silencing
+    stdout, so `slowlens big.log | head` stays quiet on every supported platform.

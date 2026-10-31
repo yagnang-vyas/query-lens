@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from querylens.models import FingerprintStats, Hint, ParseStats
-from querylens.rules import HINTS
+from slowlens.models import FingerprintStats, Hint, ParseStats
+from slowlens.rules import HINTS
 
 OutputFormat = Literal["text", "json", "markdown"]
 OUTPUT_FORMATS: tuple[OutputFormat, ...] = ("text", "json", "markdown")
@@ -40,13 +40,13 @@ def render(output: OutputFormat, data: ReportData) -> str:
     """Render ``data`` in the requested format. The result always ends with a newline."""
     # Imported lazily so that importing the package does not load every renderer.
     if output == "json":
-        from querylens.report.json_report import render_json
+        from slowlens.report.json_report import render_json
 
         return render_json(data)
     if output == "markdown":
-        from querylens.report.markdown import render_markdown
+        from slowlens.report.markdown import render_markdown
 
         return render_markdown(data)
-    from querylens.report.text import render_text
+    from slowlens.report.text import render_text
 
     return render_text(data)

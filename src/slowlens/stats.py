@@ -7,9 +7,9 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Literal
 
-from querylens.fingerprint import Dialect, fingerprint_id, normalize_tokens, tokenize
-from querylens.models import FingerprintStats, LogEntry, ParseStats
-from querylens.rules import evaluate, high_rows_examined
+from slowlens.fingerprint import Dialect, fingerprint_id, normalize_tokens, tokenize
+from slowlens.models import FingerprintStats, LogEntry, ParseStats
+from slowlens.rules import evaluate, high_rows_examined
 
 SortKey = Literal["total", "mean", "count", "p95", "max"]
 SORT_KEYS: tuple[SortKey, ...] = ("total", "mean", "count", "p95", "max")

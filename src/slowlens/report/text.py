@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import textwrap
 
-from querylens import __version__
-from querylens.report import ReportData, one_line
+from slowlens import __version__
+from slowlens.report import ReportData, one_line
 
 QUERY_WIDTH = 120
 _COLUMNS = ("#", "ID", "Count", "Total ms", "Mean ms", "P95 ms", "Max ms", "Share %", "Hints")

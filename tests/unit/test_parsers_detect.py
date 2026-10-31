@@ -1,7 +1,7 @@
 import pytest
 
-from querylens.errors import InputError
-from querylens.parsers import DETECT_LINES, detect_format, get_parser, mysql, postgres
+from slowlens.errors import InputError
+from slowlens.parsers import DETECT_LINES, detect_format, get_parser, mysql, postgres
 
 
 def test_detect_postgres() -> None:

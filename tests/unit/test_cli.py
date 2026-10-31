@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from querylens import cli
+from slowlens import cli
 
 ROOT = Path(__file__).resolve().parents[2]
 PG = str(ROOT / "examples" / "postgres-sample.log")
@@ -44,7 +44,7 @@ def test_fail_on_hint_and_over_ms(capsys: pytest.CaptureFixture[str]) -> None:
     code, out, err = run(capsys, "--fail-on-hint", "ql005", "--fail-over-ms", "10", MYSQL)
     assert code == 1
     assert out
-    assert err.startswith("querylens: failing: --fail-on-hint QL005 matched 1 fingerprint(s) (")
+    assert err.startswith("slowlens: failing: --fail-on-hint QL005 matched 1 fingerprint(s) (")
     assert "--fail-over-ms 10: p95 exceeded by" in err
     assert "more)" in err  # more than five slow fingerprints are summarized
 
@@ -52,7 +52,7 @@ def test_fail_on_hint_and_over_ms(capsys: pytest.CaptureFixture[str]) -> None:
 def test_error_exit_code_has_no_traceback(capsys: pytest.CaptureFixture[str]) -> None:
     code, out, err = run(capsys, "does-not-exist.log")
     assert (code, out) == (2, "")
-    assert err.startswith("querylens: error: cannot read 'does-not-exist.log'")
+    assert err.startswith("slowlens: error: cannot read 'does-not-exist.log'")
 
 
 @pytest.mark.parametrize(
@@ -68,7 +68,7 @@ def test_usage_errors_exit_2(argv: list[str], capsys: pytest.CaptureFixture[str]
     with pytest.raises(SystemExit) as exc:
         cli.main(argv)
     assert exc.value.code == 2
-    assert "querylens: error:" in capsys.readouterr().err
+    assert "slowlens: error:" in capsys.readouterr().err
 
 
 def test_unknown_hint_error_lists_known_ids(capsys: pytest.CaptureFixture[str]) -> None:

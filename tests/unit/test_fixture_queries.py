@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from querylens.fingerprint import Dialect, normalize
-from querylens.models import ParseStats
-from querylens.parsers import get_parser
+from slowlens.fingerprint import Dialect, normalize
+from slowlens.models import ParseStats
+from slowlens.parsers import get_parser
 
 ROOT = Path(__file__).resolve().parents[2]
 LOGS: list[tuple[Path, Dialect]] = [

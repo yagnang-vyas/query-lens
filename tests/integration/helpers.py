@@ -22,17 +22,18 @@ class Result:
 
 
 def run_cli(*args: str, stdin: bytes | None = None) -> Result:
-    """Run ``python -m querylens`` from the repository root and capture its output."""
+    """Run ``python -m slowlens`` from the repository root and capture its output."""
     completed = subprocess.run(
-        [sys.executable, "-m", "querylens", *args],
+        [sys.executable, "-m", "slowlens", *args],
         input=stdin if stdin is not None else b"",
         capture_output=True,
         cwd=ROOT,
         check=False,
         timeout=120,
     )
+    # Normalize newlines so golden files (LF) match on Windows (CRLF from pipes).
     return Result(
         completed.returncode,
-        completed.stdout.decode("utf-8"),
-        completed.stderr.decode("utf-8"),
+        completed.stdout.decode("utf-8").replace("\r\n", "\n"),
+        completed.stderr.decode("utf-8").replace("\r\n", "\n"),
     )

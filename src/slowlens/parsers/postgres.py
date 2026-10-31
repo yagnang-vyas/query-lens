@@ -11,7 +11,7 @@ import re
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
 
-from querylens.models import LogEntry, ParseStats
+from slowlens.models import LogEntry, ParseStats
 
 _DURATION = re.compile(r"LOG:\s+duration:\s+(?P<ms>\S+)\s+ms\b(?P<rest>.*)")
 _STATEMENT = re.compile(

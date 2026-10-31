@@ -35,7 +35,7 @@ function startWorker() {
     if (worker !== state.worker) return;
     if (msg.type === "ready") {
       state.ready = true;
-      setEngine("Engine ready: querylens " + msg.version + " running locally in your browser.");
+      setEngine("Engine ready: QueryLens " + msg.version + " (slowlens) running locally in your browser.");
       syncControls();
     } else if (msg.type === "fatal") {
       setEngine("");
@@ -144,7 +144,7 @@ function showError(message) {
 // ---- results ---------------------------------------------------------------------------------
 function showResult(result) {
   if (result.code === 2) {
-    showError((result.stderr || "QueryLens could not analyze this input.").trim().replace(/^querylens: error: /, "") +
+    showError((result.stderr || "QueryLens could not analyze this input.").trim().replace(/^slowlens: error: /, "") +
       "\n\nThe demo supports PostgreSQL stderr logs and MySQL slow query logs.");
     return;
   }
@@ -155,7 +155,7 @@ function showResult(result) {
   renderSummary(data);
   const gate = $("gate");
   gate.hidden = result.code !== 1;
-  if (result.code === 1) gate.textContent = "CI gate: the CLI would exit with code 1. " + result.stderr.replace(/^querylens: failing: /m, "").trim();
+  if (result.code === 1) gate.textContent = "CI gate: the CLI would exit with code 1. " + result.stderr.replace(/^slowlens: failing: /m, "").trim();
   renderHintFilter(data);
   ["text", "markdown", "json"].forEach(renderReportTab);
   renderList();
@@ -251,9 +251,9 @@ function renderReportTab(kind) {
   const download = el("button", { type: "button", class: "btn small", text: "Download" });
   download.addEventListener("click", () => {
     const url = URL.createObjectURL(new Blob([state.outputs[kind]], { type: "text/plain" }));
-    const a = el("a", { href: url, download: "querylens-report." + ext }); a.click(); URL.revokeObjectURL(url);
+    const a = el("a", { href: url, download: "slowlens-report." + ext }); a.click(); URL.revokeObjectURL(url);
   });
-  panel.append(el("p", { class: "muted", text: "Output of the real querylens CLI for these options (--output " + kind + ")." }),
+  panel.append(el("p", { class: "muted", text: "Output of the real QueryLens CLI (slowlens) for these options (--output " + kind + ")." }),
     el("div", { class: "report-actions" }, copyButton("Copy", () => state.outputs[kind]), download),
     el("pre", { class: "report", tabindex: "0", text: state.outputs[kind] }));
 }

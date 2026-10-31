@@ -2,8 +2,8 @@ import math
 
 import pytest
 
-from querylens.models import FingerprintStats, LogEntry, ParseStats
-from querylens.stats import aggregate, nearest_rank, rank
+from slowlens.models import FingerprintStats, LogEntry, ParseStats
+from slowlens.stats import aggregate, nearest_rank, rank
 
 
 def entry(sql: str, ms: float, sent: int | None = None, examined: int | None = None) -> LogEntry:

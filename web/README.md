@@ -1,10 +1,10 @@
 # QueryLens web playground
 
-A static site that runs the real `querylens` package in the browser, so people can try it without installing anything.
+A static site that runs the real `slowlens` package in the browser, so people can try it without installing anything.
 
 ## Architecture
 
-- **Engine.** [Pyodide](https://pyodide.org) (CPython on WebAssembly) runs inside a Web Worker. `build.py` zips `src/querylens` unchanged, the worker unpacks it, and `bridge.py` calls `querylens.cli.main` three times (`--output json`, `text`, `markdown`) with the options the user picked. The playground shows the CLI's own output; nothing is re-implemented in JavaScript, and the CLI package is not modified.
+- **Engine.** [Pyodide](https://pyodide.org) (CPython on WebAssembly) runs inside a Web Worker. `build.py` zips `src/slowlens` unchanged, the worker unpacks it, and `bridge.py` calls `slowlens.cli.main` three times (`--output json`, `text`, `markdown`) with the options the user picked. The playground shows the CLI's own output; nothing is re-implemented in JavaScript, and the CLI package is not modified.
 - **Interface.** Plain HTML, CSS and JavaScript with no framework and no npm dependencies in the shipped site. The pattern list, search, sorting and hint filter are rendered from the JSON report. All text is inserted with `textContent`, never `innerHTML`.
 - **Privacy.** The log stays in the browser. The only network requests are for the site's own files and for Pyodide from the jsDelivr CDN (pinned to `0.27.7`). A Content-Security-Policy in `netlify.toml` limits scripts to the site and that CDN.
 - **Safeguards.** 5 MB input limit, gzip rejected (avoids decompression bombs), at most 500 patterns requested, a 60 second timeout that terminates the worker, and uploaded text is only ever parsed as a log, never executed.

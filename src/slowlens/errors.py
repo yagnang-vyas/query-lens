@@ -1,6 +1,6 @@
 """Exception types raised by QueryLens.
 
-Every error that should reach the user as ``querylens: error: <message>`` derives from
+Every error that should reach the user as ``slowlens: error: <message>`` derives from
 :class:`QueryLensError`; anything else is a bug and is allowed to propagate.
 """
 

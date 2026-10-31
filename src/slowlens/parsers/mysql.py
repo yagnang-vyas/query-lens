@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
 
-from querylens.models import LogEntry, ParseStats
+from slowlens.models import LogEntry, ParseStats
 
 _TIME = re.compile(r"#\s*Time:\s*(?P<ts>.*\S)")
 _USER_HOST = re.compile(r"#\s*User@Host:")

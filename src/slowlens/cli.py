@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import errno
 import math
 import os
 import sys
@@ -11,20 +12,23 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from itertools import chain, islice
 
-from querylens import __version__
-from querylens.errors import InputError, QueryLensError
-from querylens.inputs import display_name, open_lines
-from querylens.models import FingerprintStats, LogEntry, ParseStats
-from querylens.parsers import DETECT_LINES, LogFormat, detect_format, get_parser
-from querylens.report import OUTPUT_FORMATS, ReportData, render
-from querylens.rules import HINTS
-from querylens.stats import SORT_KEYS, aggregate, rank
+from slowlens import __version__
+from slowlens.errors import InputError, QueryLensError
+from slowlens.inputs import display_name, open_lines
+from slowlens.models import FingerprintStats, LogEntry, ParseStats
+from slowlens.parsers import DETECT_LINES, LogFormat, detect_format, get_parser
+from slowlens.report import OUTPUT_FORMATS, ReportData, render
+from slowlens.rules import HINTS
+from slowlens.stats import SORT_KEYS, aggregate, rank
 
 EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_ERROR = 2
 EXIT_INTERRUPTED = 130
 EXIT_BROKEN_PIPE = 141  # 128 + SIGPIPE, what `yes | head` reports for the writer
+
+# Closed stdout: BrokenPipeError on Unix; on Windows often OSError EINVAL (22).
+_BROKEN_PIPE_ERRNOS = {errno.EPIPE, errno.EINVAL}
 
 DEFAULT_TOP = 10
 _MAX_LISTED_IDS = 5
@@ -62,7 +66,7 @@ def _hint_ids(text: str) -> tuple[str, ...]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="querylens",
+        prog="slowlens",
         description=(
             "Analyze PostgreSQL and MySQL slow query logs offline: group queries by "
             "fingerprint, rank them by time and flag common anti-patterns. Reports contain "
@@ -148,15 +152,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         return _run(args)
     except QueryLensError as exc:
-        print(f"querylens: error: {exc}", file=sys.stderr)
+        print(f"slowlens: error: {exc}", file=sys.stderr)
         return EXIT_ERROR
     except KeyboardInterrupt:
         return EXIT_INTERRUPTED
     except BrokenPipeError:
-        # The reader went away (``querylens big.log | head``). Point stdout at /dev/null so the
-        # interpreter's final flush cannot raise again, and exit quietly like other Unix tools.
-        _silence_stdout()
-        return EXIT_BROKEN_PIPE
+        return _exit_broken_pipe()
+    except OSError as exc:
+        # Windows reports a closed stdout pipe as OSError(EINVAL), not BrokenPipeError.
+        if exc.errno not in _BROKEN_PIPE_ERRNOS:
+            raise
+        return _exit_broken_pipe()
+
+
+def _exit_broken_pipe() -> int:
+    """Silence stdout and exit 141 when the reader went away (``slowlens big.log | head``)."""
+    _silence_stdout()
+    return EXIT_BROKEN_PIPE
 
 
 def _silence_stdout() -> None:
@@ -203,7 +215,7 @@ def _run(args: argparse.Namespace) -> int:
     sys.stdout.flush()
     reason = _failure_reason(ranked, _Thresholds(args.fail_on_hint, args.fail_over_ms))
     if reason:
-        print(f"querylens: failing: {reason}", file=sys.stderr)
+        print(f"slowlens: failing: {reason}", file=sys.stderr)
         return EXIT_FAILED
     return EXIT_OK
 

@@ -1,6 +1,6 @@
 """Assemble the static demo site into web/dist (standard library only).
 
-Copies the page, zips the querylens package so Pyodide can unpack it and copies the sample logs
+Copies the page, zips the slowlens package so Pyodide can unpack it and copies the sample logs
 from examples/. Run from anywhere: ``python3 web/build.py``.
 
 By default the browser loads Pyodide from the jsDelivr CDN. Set ``QUERYLENS_PYODIDE_DIR`` to a
@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
 DIST = WEB / "dist"
-PACKAGE = ROOT / "src" / "querylens"
+PACKAGE = ROOT / "src" / "slowlens"
 SAMPLES = ("postgres-sample.log", "mysql-slow-sample.log")
 PAGE_FILES = ("index.html", "app.css", "app.js", "worker.js", "bridge.py")
 PYODIDE_VERSION = "0.27.7"
@@ -39,10 +39,10 @@ def build() -> Path:
     (DIST / "samples").mkdir(parents=True)
     for name in PAGE_FILES:
         shutil.copy(WEB / name, DIST / name)
-    with zipfile.ZipFile(DIST / "querylens.zip", "w", zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(DIST / "slowlens.zip", "w", zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(PACKAGE.rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc":
-                archive.write(path, Path("querylens") / path.relative_to(PACKAGE))
+                archive.write(path, Path("slowlens") / path.relative_to(PACKAGE))
     for name in SAMPLES:
         shutil.copy(ROOT / "examples" / name, DIST / "samples" / name)
     pyodide_dir = os.environ.get("QUERYLENS_PYODIDE_DIR")

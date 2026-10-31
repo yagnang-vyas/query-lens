@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from querylens.errors import InputError
-from querylens.inputs import display_name, open_lines
+from slowlens.errors import InputError
+from slowlens.inputs import display_name, open_lines
 
 
 def test_reads_plain_file_and_normalizes_crlf(tmp_path: Path) -> None:

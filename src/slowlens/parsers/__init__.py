@@ -6,9 +6,9 @@ import re
 from collections.abc import Callable, Iterable, Iterator
 from typing import Literal
 
-from querylens.errors import InputError
-from querylens.models import LogEntry, ParseStats
-from querylens.parsers import mysql, postgres
+from slowlens.errors import InputError
+from slowlens.models import LogEntry, ParseStats
+from slowlens.parsers import mysql, postgres
 
 LogFormat = Literal["postgres", "mysql"]
 Parser = Callable[[Iterable[str], str, ParseStats], Iterator[LogEntry]]
@@ -25,7 +25,7 @@ _PARSERS: dict[LogFormat, Parser] = {"postgres": postgres.parse, "mysql": mysql.
 def detect_format(lines: Iterable[str]) -> LogFormat:
     """Guess the log format from the first :data:`DETECT_LINES` lines.
 
-    Raises :class:`~querylens.errors.InputError` when neither format is recognised.
+    Raises :class:`~slowlens.errors.InputError` when neither format is recognised.
     """
     for number, line in enumerate(lines):
         if number >= DETECT_LINES:

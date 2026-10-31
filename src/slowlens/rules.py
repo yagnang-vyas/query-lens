@@ -1,7 +1,7 @@
 """Heuristic optimization hints.
 
 Every rule is a pure function over the *tokens* of one raw query (see
-:func:`querylens.fingerprint.tokenize`). Token text is already normalized (lowercase, literals
+:func:`slowlens.fingerprint.tokenize`). Token text is already normalized (lowercase, literals
 replaced by ``?``); the raw literal is available as ``Token.value`` and is used only by the two
 rules that must look at a literal's value (QL003, QL004). A rule returns a boolean, so raw text
 never leaves this module.
@@ -16,8 +16,8 @@ import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
-from querylens.fingerprint import IDENT, LITERAL, OP, PUNCT, WORD, Token
-from querylens.models import Hint
+from slowlens.fingerprint import IDENT, LITERAL, OP, PUNCT, WORD, Token
+from slowlens.models import Hint
 
 #: ``Rows_examined / Rows_sent`` above which QL007 fires.
 EXAMINED_PER_SENT_THRESHOLD = 1000

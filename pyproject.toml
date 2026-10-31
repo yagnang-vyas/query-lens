@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]  # 1.27+ understands the PEP 639 license fields b
 build-backend = "hatchling.build"
 
 [project]
-# Distribution name on PyPI. Must differ from the unrelated taken name "querylens".
-# Import package and CLI entry point remain "querylens" (hyphens are not valid in module names).
-name = "query-lens"
+# PyPI / import / CLI name. Product branding remains "QueryLens".
+# The name "querylens" is taken on PyPI by an unrelated project.
+name = "slowlens"
 dynamic = ["version"]
 description = "Offline analyzer for PostgreSQL and MySQL slow query logs: fingerprints, statistics and heuristic hints."
 readme = "README.md"
@@ -41,17 +41,17 @@ dev = [
 ]
 
 [project.scripts]
-querylens = "querylens.cli:main"
+slowlens = "slowlens.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/yagnang-vyas/query-lens"
 Issues = "https://github.com/yagnang-vyas/query-lens/issues"
 
 [tool.hatch.version]
-path = "src/querylens/__init__.py"
+path = "src/slowlens/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/querylens"]
+packages = ["src/slowlens"]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -87,7 +87,7 @@ addopts = "-ra"
 
 [tool.coverage.run]
 branch = true
-source = ["querylens"]
+source = ["slowlens"]
 
 [tool.coverage.report]
 show_missing = true

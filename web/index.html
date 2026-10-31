@@ -130,7 +130,7 @@
     <section class="wrap about" aria-labelledby="about-title">
       <h2 id="about-title">About this demo</h2>
       <ul>
-        <li>The analysis is performed by the unmodified <code>querylens</code> Python package compiled to WebAssembly with Pyodide. The page only adds the interface. The "Text report", "Markdown" and "JSON" tabs show the CLI's own output.</li>
+        <li>The analysis is performed by the unmodified <code>slowlens</code> Python package compiled to WebAssembly with Pyodide. The page only adds the interface. The "Text report", "Markdown" and "JSON" tabs show the CLI's own output.</li>
         <li>Everything runs locally in a Web Worker. The log is not sent to any server. The page downloads Pyodide (about 10 MB) from the jsDelivr CDN on first load.</li>
         <li>Limits of the demo: 5 MB per log, up to 500 patterns shown, plain-text input only (the CLI also reads <code>.gz</code> and stdin), and an analysis that runs over 60 seconds is stopped.</li>
         <li>Hints are heuristics on query text. They do not see your schema, indexes or query plans, and can be wrong in both directions. PostgreSQL support covers the stderr log format only.</li>
@@ -139,9 +139,9 @@
       <h3>Use the CLI</h3>
       <pre class="code"><code>git clone https://github.com/yagnang-vyas/query-lens.git
 cd query-lens &amp;&amp; pipx install .
-querylens postgresql.log --top 5 --sort p95
-querylens mysql-slow.log --output markdown
-querylens app.log --fail-on-hint QL001,QL003 --fail-over-ms 750</code></pre>
+slowlens postgresql.log --top 5 --sort p95
+slowlens mysql-slow.log --output markdown
+slowlens app.log --fail-on-hint QL001,QL003 --fail-over-ms 750</code></pre>
     </section>
   </main>
 

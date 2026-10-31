@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 
-from querylens.models import FingerprintStats, ParseStats
-from querylens.report import ReportData, one_line, render
-from querylens.report.markdown import code_span, escape
-from querylens.report.text import truncate
+from slowlens.models import FingerprintStats, ParseStats
+from slowlens.report import ReportData, one_line, render
+from slowlens.report.markdown import code_span, escape
+from slowlens.report.text import truncate
 
 
 def item(

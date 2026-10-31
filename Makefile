@@ -12,7 +12,7 @@ typecheck:
 	mypy src
 
 test:
-	pytest --cov=querylens --cov-branch --cov-report=term-missing --cov-fail-under=90
+	pytest --cov=slowlens --cov-branch --cov-report=term-missing --cov-fail-under=90
 
 check: lint typecheck test
 

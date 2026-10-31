@@ -1,7 +1,7 @@
 import pytest
 
-from querylens.fingerprint import Dialect, tokenize
-from querylens.rules import HINTS, RULES, evaluate, high_rows_examined
+from slowlens.fingerprint import Dialect, tokenize
+from slowlens.rules import HINTS, RULES, evaluate, high_rows_examined
 
 
 def hints(sql: str) -> set[str]:

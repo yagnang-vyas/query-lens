@@ -1,6 +1,6 @@
 import pytest
 
-from querylens.fingerprint import fingerprint_id, normalize
+from slowlens.fingerprint import fingerprint_id, normalize
 
 
 @pytest.mark.parametrize(

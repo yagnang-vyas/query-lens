@@ -1,5 +1,5 @@
 {
-  "name": "querylens-web-tests",
+  "name": "slowlens-web-tests",
   "private": true,
   "description": "Dev-only tooling for the QueryLens browser demo tests. The site itself has no npm dependencies.",
   "scripts": {

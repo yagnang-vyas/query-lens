@@ -5,9 +5,9 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from querylens import __version__
-from querylens.models import FingerprintStats
-from querylens.report import ReportData, one_line
+from slowlens import __version__
+from slowlens.models import FingerprintStats
+from slowlens.report import ReportData, one_line
 
 SCHEMA_VERSION = 1
 
@@ -38,7 +38,7 @@ def to_dict(data: ReportData) -> dict[str, Any]:
     stats = data.parse_stats
     return {
         "schema_version": SCHEMA_VERSION,
-        "tool": {"name": "querylens", "version": __version__},
+        "tool": {"name": "slowlens", "version": __version__},
         "input": {
             "format": data.log_format,
             "files": list(data.files),

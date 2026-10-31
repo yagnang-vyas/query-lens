@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import re
 
-from querylens import __version__
-from querylens.report import ReportData, one_line
+from slowlens import __version__
+from slowlens.report import ReportData, one_line
 
 _HEADER = (
     "| # | ID | Query | Count | Total ms | Mean ms | P95 ms | Max ms | Share % | Hints |",

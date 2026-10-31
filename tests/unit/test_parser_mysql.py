@@ -1,5 +1,5 @@
-from querylens.models import LogEntry, ParseStats
-from querylens.parsers.mysql import parse
+from slowlens.models import LogEntry, ParseStats
+from slowlens.parsers.mysql import parse
 
 
 def run(text: str) -> tuple[list[LogEntry], ParseStats]:

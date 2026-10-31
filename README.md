@@ -26,16 +26,17 @@ A slow query log holds thousands of near-identical entries that differ only in t
 
 ## Installation
 
-From [PyPI](https://pypi.org/project/query-lens/) (after the first upload — see
+From [PyPI](https://pypi.org/project/slowlens/) (after the first upload — see
 [RELEASING.md](RELEASING.md)):
 
 ```bash
-pipx install query-lens    # or: pip install query-lens
-querylens --version
+pipx install slowlens    # or: pip install slowlens
+slowlens --version
 ```
 
-The PyPI project is **`query-lens`** (hyphen). The import package and CLI command stay
-`querylens`. Do not confuse it with the unrelated PyPI project named `querylens`.
+**QueryLens** is the product name. On PyPI, the import package and CLI are **`slowlens`**
+(`pip install slowlens` → run `slowlens`). The name `querylens` is already taken by an
+unrelated project. The GitHub repository remains `query-lens`.
 
 From a clone (development or before the package is on PyPI):
 
@@ -43,7 +44,7 @@ From a clone (development or before the package is on PyPI):
 git clone https://github.com/yagnang-vyas/query-lens.git
 cd query-lens
 pipx install .          # or: python -m venv .venv && . .venv/bin/activate && pip install .
-querylens --version
+slowlens --version
 ```
 
 Maintainer steps for GitHub Releases and PyPI Trusted Publishing are in
@@ -72,17 +73,17 @@ long_query_time = 0.5              # seconds
 
 ```bash
 # Top 10 shapes by total time; the format is auto-detected
-querylens examples/postgres-sample.log
+slowlens examples/postgres-sample.log
 
 # Top 5 by 95th percentile, as Markdown for a pull request comment
-querylens --top 5 --sort p95 --output markdown examples/mysql-slow-sample.log
+slowlens --top 5 --sort p95 --output markdown examples/mysql-slow-sample.log
 
 # Machine-readable output, ignoring anything faster than 50 ms
-querylens --output json --min-duration 50 examples/postgres-sample.log
+slowlens --output json --min-duration 50 examples/postgres-sample.log
 
 # Several files, compressed files and stdin
-querylens postgresql-2026-10-24.log postgresql-2026-10-25.log.gz
-zcat mysql-slow.log.gz | querylens --format mysql -
+slowlens postgresql-2026-10-24.log postgresql-2026-10-25.log.gz
+zcat mysql-slow.log.gz | slowlens --format mysql -
 ```
 
 ### Using it as a CI gate
@@ -90,14 +91,14 @@ zcat mysql-slow.log.gz | querylens --format mysql -
 ```bash
 # Fail the build if any query shape has SELECT * (QL001) or a leading wildcard LIKE (QL003),
 # or if any shape has a p95 above 750 ms.
-querylens --fail-on-hint QL001,QL003 --fail-over-ms 750 slow.log
+slowlens --fail-on-hint QL001,QL003 --fail-over-ms 750 slow.log
 ```
 
 The report is printed as usual, followed by a one-line reason on stderr, and the exit code is `1`. Fail conditions are evaluated on **all** fingerprints, not only the `--top` subset.
 
 ## Sample output
 
-Produced by running `querylens --top 5 examples/postgres-sample.log` on the synthetic sample log in this repository:
+Produced by running `slowlens --top 5 examples/postgres-sample.log` on the synthetic sample log in this repository:
 
 ```text
 QueryLens 0.1.0 | format: postgres | files: examples/postgres-sample.log
@@ -157,7 +158,7 @@ A fingerprint carries a hint if any of its entries triggered it.
 ```json
 {
   "schema_version": 1,
-  "tool": {"name": "querylens", "version": "0.1.0"},
+  "tool": {"name": "slowlens", "version": "0.1.0"},
   "input": {
     "format": "postgres",
     "files": ["examples/postgres-sample.log"],
@@ -191,9 +192,9 @@ A fingerprint carries a hint if any of its entries triggered it.
 | 1 | A `--fail-on-hint` or `--fail-over-ms` condition triggered (the report is still printed) |
 | 2 | Usage or input error: bad arguments, missing or unreadable file, undetectable format, or zero entries parsed |
 | 130 | Interrupted with Ctrl-C |
-| 141 | The output pipe was closed early (for example `querylens big.log \| head`); QueryLens stops quietly, the same code a shell reports for a process killed by `SIGPIPE` |
+| 141 | The output pipe was closed early (for example `slowlens big.log \| head`); QueryLens stops quietly, the same code a shell reports for a process killed by `SIGPIPE` |
 
-Errors are printed as `querylens: error: <message>` with no traceback. Messages name files and counts, never log content.
+Errors are printed as `slowlens: error: <message>` with no traceback. Messages name files and counts, never log content.
 
 ## How it works
 

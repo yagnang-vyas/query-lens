@@ -1,7 +1,7 @@
-"""Glue between the browser demo and the querylens CLI, run inside Pyodide.
+"""Glue between the browser demo and the slowlens CLI, run inside Pyodide.
 
 The page writes the uploaded log to ``LOG_PATH`` and calls :func:`analyze`, which drives the real
-``querylens.cli.main`` once per output format. Nothing here re-implements analysis, so the demo's
+``slowlens.cli.main`` once per output format. Nothing here re-implements analysis, so the demo's
 numbers are exactly what the command line prints.
 """
 
@@ -12,9 +12,9 @@ import io
 from collections.abc import Mapping
 from typing import Any
 
-from querylens.cli import main
+from slowlens.cli import main
 
-LOG_PATH = "/tmp/querylens-input.log"  # path inside Pyodide's in-memory filesystem
+LOG_PATH = "/tmp/slowlens-input.log"  # path inside Pyodide's in-memory filesystem
 OUTPUTS = ("json", "text", "markdown")
 MAX_TOP = 500
 

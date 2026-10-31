@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/query-lens
+      url: https://pypi.org/p/slowlens
     permissions:
       id-token: write
     steps:

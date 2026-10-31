@@ -1,4 +1,4 @@
-// Runs Pyodide (CPython compiled to WebAssembly) and the real querylens package off the main thread.
+// Runs Pyodide (CPython compiled to WebAssembly) and the real slowlens package off the main thread.
 /* global importScripts, loadPyodide */
 "use strict";
 
@@ -13,13 +13,13 @@ async function init() {
   const cfg = await (await fetch("config.json")).json();
   importScripts(cfg.pyodideBase + "pyodide.js");
   pyodide = await loadPyodide({ indexURL: cfg.pyodideBase });
-  const zip = await (await fetch("querylens.zip")).arrayBuffer();
-  pyodide.unpackArchive(zip, "zip", { extractDir: "/lib/querylens-src" });
-  pyodide.runPython("import sys; sys.path.insert(0, '/lib/querylens-src')");
+  const zip = await (await fetch("slowlens.zip")).arrayBuffer();
+  pyodide.unpackArchive(zip, "zip", { extractDir: "/lib/slowlens-src" });
+  pyodide.runPython("import sys; sys.path.insert(0, '/lib/slowlens-src')");
   const source = await (await fetch("bridge.py")).text();
-  pyodide.FS.writeFile("/lib/querylens-src/ql_bridge.py", source);
+  pyodide.FS.writeFile("/lib/slowlens-src/ql_bridge.py", source);
   bridge = pyodide.pyimport("ql_bridge");
-  post({ type: "ready", version: pyodide.runPython("import querylens; querylens.__version__") });
+  post({ type: "ready", version: pyodide.runPython("import slowlens; slowlens.__version__") });
 }
 
 function analyze(id, bytes, options) {

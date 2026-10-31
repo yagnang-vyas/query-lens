@@ -4,13 +4,17 @@ Maintainer checklist for shipping a version to GitHub Releases and PyPI.
 Agents do not push, create releases, or run `gh` (see [AGENTS.md](AGENTS.md));
 a human performs the publish steps below.
 
+**Names:** product branding is **QueryLens**; the PyPI project, import package and
+CLI are **`slowlens`** (`pip install slowlens` → `slowlens`). The GitHub repository
+remains `query-lens`. Do not use the unrelated PyPI project named `querylens`.
+
 The browser demo stays on Netlify ([web/README.md](web/README.md)). Publishing
 the Python package does not redeploy the site.
 
 ## Versioning
 
 - Semantic Versioning (`MAJOR.MINOR.PATCH`), documented in [CHANGELOG.md](CHANGELOG.md).
-- Single source of truth: `__version__` in `src/querylens/__init__.py`
+- Single source of truth: `__version__` in `src/slowlens/__init__.py`
   (`pyproject.toml` reads it via Hatch).
 - Tag format: `v0.1.0` (leading `v`, matches the existing first release).
 
@@ -20,10 +24,9 @@ Do this once before the first upload. No long-lived API token is required.
 
 1. Sign in at [pypi.org](https://pypi.org/) (create an account and enable 2FA if needed).
 2. Open **Your projects → Publishing** (or create the project via
-   **Publishing → Add a new pending publisher** if `query-lens` does not exist yet).
+   **Publishing → Add a new pending publisher** if `slowlens` does not exist yet).
 3. Add a **Trusted Publisher** with:
-   - **PyPI project name:** `query-lens` (hyphen; the bare name `querylens` is already
-     taken by an unrelated project)
+   - **PyPI project name:** `slowlens`
    - **Owner:** `yagnang-vyas`
    - **Repository:** `query-lens`
    - **Workflow name:** `publish.yml`
@@ -46,11 +49,11 @@ re-fire the workflow, so use a manual run for the debut upload:
 4. Approve the `pypi` environment if you enabled protection rules.
 5. When the job succeeds, verify:
    ```bash
-   pip install query-lens==0.1.0
-   querylens --version
+   pip install slowlens==0.1.0
+   slowlens --version
    ```
 6. Update the GitHub Release notes for `v0.1.0` if useful (e.g. note that
-   `pip install query-lens` now works). Do not change the version number.
+   `pip install slowlens` now works). Do not change the version number.
 
 PyPI versions are immutable: a failed half-upload of `0.1.0` may require a
 patch bump (`0.1.1`) for a retry. Prefer fixing Trusted Publisher config before
@@ -60,7 +63,7 @@ the first run.
 
 1. **Changelog.** Move items from `[Unreleased]` into a new `## [X.Y.Z] - YYYY-MM-DD`
    section in `CHANGELOG.md`. Add a compare link at the bottom.
-2. **Version.** Set `__version__ = "X.Y.Z"` in `src/querylens/__init__.py`.
+2. **Version.** Set `__version__ = "X.Y.Z"` in `src/slowlens/__init__.py`.
 3. **Checks.** From a clean tree:
    ```bash
    make check
@@ -78,8 +81,8 @@ the first run.
    workflow, which builds and uploads to PyPI via OIDC.
 7. **Verify.**
    ```bash
-   pip install -U query-lens
-   querylens --version
+   pip install -U slowlens
+   slowlens --version
    ```
 8. **Demo.** Netlify redeploys from `main` on its own; no extra step unless the
    playground needs a content update for the new version.
@@ -88,7 +91,7 @@ the first run.
 
 ```bash
 make dist
-# inspect dist/query_lens-*.tar.gz and dist/query_lens-*.whl  (PEP 503 normalizes "-" to "_")
+# inspect dist/slowlens-*.tar.gz and dist/slowlens-*.whl
 # do not run twine upload; CI owns publishing
 ```
 

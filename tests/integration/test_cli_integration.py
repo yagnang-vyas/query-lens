@@ -41,7 +41,7 @@ def test_json_matches_golden(golden: str, sample: str) -> None:
 def test_json_structure(sample: str, fmt: str) -> None:
     report = json.loads(run_cli("--output", "json", sample).out)
     assert report["schema_version"] == 1
-    assert report["tool"]["name"] == "querylens"
+    assert report["tool"]["name"] == "slowlens"
     assert report["input"]["format"] == fmt
     assert report["input"]["files"] == [sample]
     assert len(report["fingerprints"]) == min(10, report["summary"]["unique_fingerprints"])
@@ -139,7 +139,7 @@ def test_exit_1_fail_on_hint() -> None:
     assert result.code == 1
     assert result.out.startswith("QueryLens")  # report is still printed
     assert result.err.count("\n") == 1
-    assert result.err.startswith("querylens: failing: --fail-on-hint QL001,QL003 matched 2 ")
+    assert result.err.startswith("slowlens: failing: --fail-on-hint QL001,QL003 matched 2 ")
 
 
 def test_fail_conditions_cover_all_fingerprints_not_only_top() -> None:
@@ -186,14 +186,14 @@ def test_exit_2_usage_and_input_errors(args: list[str]) -> None:
     result = run_cli(*args)
     assert result.code == 2
     assert result.out == ""
-    assert "querylens: error:" in result.err
+    assert "slowlens: error:" in result.err
     assert "Traceback" not in result.err
 
 
 def test_missing_file_message_is_clear() -> None:
     result = run_cli("no-such-file.log")
     assert result.err.strip() == (
-        "querylens: error: cannot read 'no-such-file.log': No such file or directory"
+        "slowlens: error: cannot read 'no-such-file.log': No such file or directory"
     )
 
 
@@ -230,7 +230,7 @@ def test_everything_filtered_is_not_an_error() -> None:
 
 
 def test_version_and_help() -> None:
-    assert run_cli("--version").out == "querylens 0.1.0\n"
+    assert run_cli("--version").out == "slowlens 0.1.0\n"
     help_text = " ".join(run_cli("--help").out.split())
     assert "Checked on all fingerprints, not only the --top subset" in help_text
     assert "--fail-on-hint IDS" in help_text
@@ -291,13 +291,13 @@ def test_errors_do_not_echo_log_content(tmp_path: Path) -> None:
 
 
 def test_closed_stdout_exits_quietly_with_141() -> None:
-    """``querylens big.log | head`` must not print a BrokenPipeError traceback, and must not
+    """``slowlens big.log | head`` must not print a BrokenPipeError traceback, and must not
     reuse exit code 1, which means a --fail-on-* condition triggered."""
     read_end, write_end = os.pipe()
     os.close(read_end)  # the reader is already gone, so the first write fails with EPIPE
     try:
         completed = subprocess.run(
-            [sys.executable, "-m", "querylens", POSTGRES_SAMPLE],
+            [sys.executable, "-m", "slowlens", POSTGRES_SAMPLE],
             cwd=ROOT,
             stdout=write_end,
             stderr=subprocess.PIPE,
