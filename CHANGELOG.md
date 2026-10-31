@@ -16,6 +16,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   sdist/wheel without uploading.
 - Public technical name **`slowlens`** (PyPI, import package, CLI) while product branding remains
   **QueryLens**. Chosen because `querylens` / `query-lens` are taken or too similar on PyPI.
+- Web playground install section points at PyPI (`pipx install slowlens`) instead of clone-only
+  install.
 
 ## [0.1.0] - 2026-10-25
 
