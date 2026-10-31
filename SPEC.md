@@ -22,8 +22,8 @@ as text, JSON or Markdown. Exit codes make it usable as a CI gate.
 - Connecting to a database or running `EXPLAIN`.
 - PostgreSQL `csvlog` / `jsonlog` formats and `pg_stat_statements` input.
 - A full SQL parser (normalization is tokenizer based).
-- Any web UI or dashboard.
-- Publishing to PyPI.
+- A full SQL-aware web product (the optional static playground in `web/` is a
+  demo only; the CLI remains the primary interface).
 
 ## Interface
 
@@ -186,3 +186,10 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
 19. **More list collapsing.** Row-value lists (`(a, b) in ((1, 2), (3, 4))`) and PostgreSQL
     `ARRAY[...]` literal lists collapse to `(?+)` / `[?+]`, because ORMs emit them with a varying
     number of elements and they would otherwise split one query shape into many fingerprints.
+20. **PyPI via Trusted Publishing.** Releases are uploaded to PyPI from GitHub Actions using
+    OIDC Trusted Publishing (workflow `.github/workflows/publish.yml`, environment `pypi`), not a
+    stored API token. The first upload of the existing GitHub Release `v0.1.0` uses
+    `workflow_dispatch`; later versions publish when a GitHub Release is published. Steps are in
+    `RELEASING.md`. The browser demo remains on Netlify and is independent of the PyPI upload.
+21. **v0.1.0 remains the first PyPI version.** Packaging and release-tooling docs do not bump the
+    package version; `__version__` stays `0.1.0` until a deliberate SemVer change.

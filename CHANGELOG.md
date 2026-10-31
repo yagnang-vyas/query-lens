@@ -11,6 +11,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Browser playground in `web/` that runs the unmodified package through Pyodide, with a Netlify
   configuration (`netlify.toml`), bridge/build tests and a headless-browser end-to-end test.
+- GitHub Actions **Publish** workflow (Trusted Publishing / OIDC) and [RELEASING.md](RELEASING.md)
+  maintainer checklist for GitHub Releases and PyPI. Local `make dist` builds and checks the
+  sdist/wheel without uploading.
 
 ## [0.1.0] - 2026-10-25
 

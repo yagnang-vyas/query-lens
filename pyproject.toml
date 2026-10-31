@@ -52,7 +52,19 @@ path = "src/querylens/__init__.py"
 packages = ["src/querylens"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/", "tests/", "examples/", "README.md", "LICENSE", "CHANGELOG.md", "SPEC.md"]
+include = [
+    "src/",
+    "tests/",
+    "examples/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SPEC.md",
+    "RELEASING.md",
+    "AGENTS.md",
+    "Makefile",
+    "pyproject.toml",
+]
 
 [tool.ruff]
 line-length = 100

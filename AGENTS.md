@@ -17,7 +17,8 @@ Ground rules for anyone, human or AI agent, changing this repository.
 6. **Zero runtime dependencies.** Standard library only at runtime.
 7. **Git.** Use Conventional Commits (`feat:`, `test:`, `docs:`, `chore:`, `fix:`, `refactor:`).
    Agents never add a remote, push, force-push, or run any `gh` command; publishing is done by the
-   maintainer.
+   maintainer following [RELEASING.md](RELEASING.md) (GitHub Release + PyPI Trusted Publishing).
+   Do not bump `__version__` or cut tags unless the maintainer asks.
 8. **Ambiguity.** If a requirement is ambiguous or contradictory, choose the most conservative
    interpretation and record the decision in `SPEC.md` under "Decisions".
 

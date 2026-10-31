@@ -26,7 +26,15 @@ A slow query log holds thousands of near-identical entries that differ only in t
 
 ## Installation
 
-QueryLens is **not on PyPI yet**. Install it from a clone:
+From [PyPI](https://pypi.org/project/querylens/) (after the first upload — see
+[RELEASING.md](RELEASING.md)):
+
+```bash
+pipx install querylens    # or: pip install querylens
+querylens --version
+```
+
+From a clone (development or before the package is on PyPI):
 
 ```bash
 git clone https://github.com/yagnang-vyas/query-lens.git
@@ -34,6 +42,9 @@ cd query-lens
 pipx install .          # or: python -m venv .venv && . .venv/bin/activate && pip install .
 querylens --version
 ```
+
+Maintainer steps for GitHub Releases and PyPI Trusted Publishing are in
+[RELEASING.md](RELEASING.md). The live demo stays on Netlify; see [web/README.md](web/README.md).
 
 ## Enabling slow query logs
 
@@ -217,6 +228,7 @@ python -m venv .venv
 make install   # editable install with ruff, mypy, pytest, pytest-cov
 make check     # ruff, ruff format --check, mypy --strict, pytest with >= 90% branch coverage
 make format    # apply ruff formatting and safe fixes
+make dist      # build sdist/wheel and run twine check (does not upload)
 ```
 
 JSON golden files for the sample logs live in `tests/golden/`. After an intentional output change, regenerate them and review the diff:
@@ -229,7 +241,7 @@ Test fixtures are synthetic; see `tests/fixtures/README.md`. The design and acce
 
 ## Roadmap
 
-Ideas for later versions, none of them promised: PostgreSQL `csvlog` / `jsonlog` input, `pg_stat_statements` snapshots, a baseline comparison mode for CI (fail on regressions rather than absolute thresholds), configurable hint thresholds, and publishing to PyPI.
+Ideas for later versions, none of them promised: PostgreSQL `csvlog` / `jsonlog` input, `pg_stat_statements` snapshots, a baseline comparison mode for CI (fail on regressions rather than absolute thresholds), and configurable hint thresholds.
 
 ## License
 
