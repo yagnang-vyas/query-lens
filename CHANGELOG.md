@@ -13,7 +13,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   configuration (`netlify.toml`), bridge/build tests and a headless-browser end-to-end test.
 - GitHub Actions **Publish** workflow (Trusted Publishing / OIDC) and [RELEASING.md](RELEASING.md)
   maintainer checklist for GitHub Releases and PyPI. Local `make dist` builds and checks the
-  sdist/wheel without uploading.
+  sdist/wheel without uploading. The PyPI project name is `query-lens` because `querylens` is
+  already taken; the import package and CLI command remain `querylens`.
 
 ## [0.1.0] - 2026-10-25
 

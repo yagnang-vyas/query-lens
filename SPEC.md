@@ -193,3 +193,6 @@ Judgment calls made where the brief was ambiguous. Each one takes the more conse
     `RELEASING.md`. The browser demo remains on Netlify and is independent of the PyPI upload.
 21. **v0.1.0 remains the first PyPI version.** Packaging and release-tooling docs do not bump the
     package version; `__version__` stays `0.1.0` until a deliberate SemVer change.
+22. **PyPI distribution name is `query-lens`.** The bare name `querylens` is already taken on PyPI
+    by an unrelated project. The import package and console script remain `querylens`
+    (`pip install query-lens` then run `querylens`).

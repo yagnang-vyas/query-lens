@@ -26,13 +26,16 @@ A slow query log holds thousands of near-identical entries that differ only in t
 
 ## Installation
 
-From [PyPI](https://pypi.org/project/querylens/) (after the first upload — see
+From [PyPI](https://pypi.org/project/query-lens/) (after the first upload — see
 [RELEASING.md](RELEASING.md)):
 
 ```bash
-pipx install querylens    # or: pip install querylens
+pipx install query-lens    # or: pip install query-lens
 querylens --version
 ```
+
+The PyPI project is **`query-lens`** (hyphen). The import package and CLI command stay
+`querylens`. Do not confuse it with the unrelated PyPI project named `querylens`.
 
 From a clone (development or before the package is on PyPI):
 

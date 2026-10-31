@@ -3,7 +3,9 @@ requires = ["hatchling>=1.27"]  # 1.27+ understands the PEP 639 license fields b
 build-backend = "hatchling.build"
 
 [project]
-name = "querylens"
+# Distribution name on PyPI. Must differ from the unrelated taken name "querylens".
+# Import package and CLI entry point remain "querylens" (hyphens are not valid in module names).
+name = "query-lens"
 dynamic = ["version"]
 description = "Offline analyzer for PostgreSQL and MySQL slow query logs: fingerprints, statistics and heuristic hints."
 readme = "README.md"

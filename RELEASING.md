@@ -20,9 +20,10 @@ Do this once before the first upload. No long-lived API token is required.
 
 1. Sign in at [pypi.org](https://pypi.org/) (create an account and enable 2FA if needed).
 2. Open **Your projects → Publishing** (or create the project via
-   **Publishing → Add a new pending publisher** if `querylens` does not exist yet).
+   **Publishing → Add a new pending publisher** if `query-lens` does not exist yet).
 3. Add a **Trusted Publisher** with:
-   - **PyPI project name:** `querylens`
+   - **PyPI project name:** `query-lens` (hyphen; the bare name `querylens` is already
+     taken by an unrelated project)
    - **Owner:** `yagnang-vyas`
    - **Repository:** `query-lens`
    - **Workflow name:** `publish.yml`
@@ -45,11 +46,11 @@ re-fire the workflow, so use a manual run for the debut upload:
 4. Approve the `pypi` environment if you enabled protection rules.
 5. When the job succeeds, verify:
    ```bash
-   pip install querylens==0.1.0
+   pip install query-lens==0.1.0
    querylens --version
    ```
 6. Update the GitHub Release notes for `v0.1.0` if useful (e.g. note that
-   `pip install querylens` now works). Do not change the version number.
+   `pip install query-lens` now works). Do not change the version number.
 
 PyPI versions are immutable: a failed half-upload of `0.1.0` may require a
 patch bump (`0.1.1`) for a retry. Prefer fixing Trusted Publisher config before
@@ -77,7 +78,7 @@ the first run.
    workflow, which builds and uploads to PyPI via OIDC.
 7. **Verify.**
    ```bash
-   pip install -U querylens
+   pip install -U query-lens
    querylens --version
    ```
 8. **Demo.** Netlify redeploys from `main` on its own; no extra step unless the
@@ -87,7 +88,7 @@ the first run.
 
 ```bash
 make dist
-# inspect dist/querylens-*.tar.gz and dist/querylens-*.whl
+# inspect dist/query_lens-*.tar.gz and dist/query_lens-*.whl  (PEP 503 normalizes "-" to "_")
 # do not run twine upload; CI owns publishing
 ```
 

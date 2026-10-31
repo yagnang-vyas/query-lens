@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/querylens
+      url: https://pypi.org/p/query-lens
     permissions:
       id-token: write
     steps:
